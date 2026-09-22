@@ -30,12 +30,33 @@
 </main></div>
 <script>
 const starter=[{name:'Juan Dela Cruz',course:'BS Information Technology',gender:'Male',year:2025,email:'juan@example.com'},{name:'Maria Santos',course:'BS Computer Science',gender:'Female',year:2024,email:'maria@example.com'},{name:'Rico Fernandez',course:'BS Information Systems',gender:'Male',year:2023,email:'rico@example.com'}];
-let alumni=JSON.parse(localStorage.getItem('alumniRecords')||'null')||starter;let systemUsers=JSON.parse(localStorage.getItem('systemUsers')||'null')||[{username:'admin',role:'Administrator',status:'Active'}];const $=id=>document.getElementById(id);const save=()=>localStorage.setItem('alumniRecords',JSON.stringify(alumni));
+const safeStorage = {
+  get(key, fallback) {
+    try {
+      const value = localStorage.getItem(key);
+      return value === null ? fallback : JSON.parse(value);
+    } catch (error) {
+      console.warn('Storage unavailable:', error);
+      return fallback;
+    }
+  },
+  set(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.warn('Could not save to storage:', error);
+    }
+  }
+};
+let alumni=safeStorage.get('alumniRecords', starter);
+let systemUsers=safeStorage.get('systemUsers', [{username:'admin',role:'Administrator',status:'Active'}]);
+const $=id=>document.getElementById(id);
+const save=()=>safeStorage.set('alumniRecords', alumni);
 function cell(text){const td=document.createElement('td');td.textContent=text;return td}
 function render(filter=''){const q=filter.toLowerCase();const list=alumni.filter(a=>Object.values(a).some(v=>String(v).toLowerCase().includes(q)));$('alumniTable').replaceChildren();list.forEach(a=>{const tr=document.createElement('tr');[a.name,a.course,a.gender,a.year,a.email].forEach(v=>tr.appendChild(cell(v)));const del=document.createElement('button');del.type='button';del.className='action-btn';del.textContent='Delete';del.onclick=()=>{alumni=alumni.filter(item=>item.email!==a.email);save();render();renderReports();renderDashboard()};const td=document.createElement('td');td.appendChild(del);tr.appendChild(td);$('alumniTable').appendChild(tr)});$('searchTable').replaceChildren();list.forEach(a=>{const tr=document.createElement('tr');[a.name,a.course,a.gender,a.year,a.email].forEach(v=>tr.appendChild(cell(v)));$('searchTable').appendChild(tr)})}
 function renderUsers(){$('usersTable').replaceChildren();systemUsers.forEach(u=>{const tr=document.createElement('tr');[u.username,u.role,u.status].forEach(v=>tr.appendChild(cell(v)));$('usersTable').appendChild(tr)})}
 function renderDashboard(){$('totalAlumni').textContent=alumni.length;$('maleCount').textContent=alumni.filter(a=>a.gender==='Male').length;$('femaleCount').textContent=alumni.filter(a=>a.gender==='Female').length;$('totalUsers').textContent=systemUsers.length}
-function renderReports(){const data=[['Total Alumni',alumni.length],['Male Alumni',alumni.filter(a=>a.gender==='Male').length],['Female Alumni',alumni.filter(a=>a.gender==='Female').length],['Latest Graduation',Math.max(...alumni.map(a=>Number(a.year||0)),0)];$('reportGrid').replaceChildren();data.forEach(([title,value])=>{const card=document.createElement('div');card.className='report-card';card.innerHTML='<h3>'+title+'</h3><p>'+value+'</p>';$('reportGrid').appendChild(card)})}
+function renderReports(){const data=[['Total Alumni',alumni.length],['Male Alumni',alumni.filter(a=>a.gender==='Male').length],['Female Alumni',alumni.filter(a=>a.gender==='Female').length],['Latest Graduation',Math.max(...alumni.map(a=>Number(a.year||0)),0)]];$('reportGrid').replaceChildren();data.forEach(([title,value])=>{const card=document.createElement('div');card.className='report-card';card.innerHTML='<h3>'+title+'</h3><p>'+value+'</p>';$('reportGrid').appendChild(card)})}
 function page(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.menu button[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id))}
 function showLoginNotification(){const toast=$('loginToast');toast.classList.add('visible');clearTimeout(showLoginNotification.timer);showLoginNotification.timer=setTimeout(()=>toast.classList.remove('visible'),4500)}
 $('loginToast').querySelector('.toast-close').onclick=()=>$('loginToast').classList.remove('visible');document.querySelectorAll('.menu button[data-page]').forEach(b=>b.onclick=()=>page(b.dataset.page));$('searchInput').oninput=e=>render(e.target.value);
