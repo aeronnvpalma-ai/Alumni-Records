@@ -152,7 +152,7 @@
                   <option>Female</option>
                 </select>
               </div>
-              <div class="form-group"><label for="graduation">Graduation Year</label><input id="graduation" type="number" required></div>
+              <div class="form-group"><label for="graduation">Academic Year</label><input id="graduation" value="2024-2025" readonly required></div>
               <div class="form-group"><label for="email">Email</label><input id="email" type="email" required></div>
             </div>
             <button class="primary-btn" type="submit">Add Alumni</button>
@@ -203,38 +203,38 @@
 
   <script>
     const starter = [
-      { name:'Alyssa Mae Dela Cruz', course:'BS Computer Science', gender:'Female', year:2020, email:'alyssa.dela.cruz@example.com' },
-      { name:'Mark Joseph Santos', course:'BS Computer Science', gender:'Male', year:2021, email:'mark.santos@example.com' },
-      { name:'Christian James Rivera', course:'BS Computer Science', gender:'Male', year:2019, email:'christian.rivera@example.com' },
-      { name:'Sophia Anne Bautista', course:'BS Computer Science', gender:'Female', year:2020, email:'sophia.bautista@example.com' },
-      { name:'Daniel Paulo Cruz', course:'BS Computer Science', gender:'Male', year:2022, email:'daniel.cruz@example.com' },
-      { name:'Bianca Claire Mendoza', course:'BS Computer Science', gender:'Female', year:2021, email:'bianca.mendoza@example.com' },
-      { name:'Nathaniel Reyes', course:'BS Computer Science', gender:'Male', year:2020, email:'nathaniel.reyes@example.com' },
-      { name:'Camille Joy Villanueva', course:'BS Computer Science', gender:'Female', year:2022, email:'camille.villanueva@example.com' },
-      { name:'Jayson Lee Ramos', course:'BS Computer Science', gender:'Male', year:2019, email:'jayson.ramos@example.com' },
-      { name:'Grace Anne Lim', course:'BS Computer Science', gender:'Female', year:2021, email:'grace.lim@example.com' },
+      { name:'Alyssa Mae Dela Cruz', course:'BS Computer Science', gender:'Female', year:'2024-2025', email:'alyssa.dela.cruz@example.com' },
+      { name:'Mark Joseph Santos', course:'BS Computer Science', gender:'Male', year:'2024-2025', email:'mark.santos@example.com' },
+      { name:'Christian James Rivera', course:'BS Computer Science', gender:'Male', year:'2024-2025', email:'christian.rivera@example.com' },
+      { name:'Sophia Anne Bautista', course:'BS Computer Science', gender:'Female', year:'2024-2025', email:'sophia.bautista@example.com' },
+      { name:'Daniel Paulo Cruz', course:'BS Computer Science', gender:'Male', year:'2024-2025', email:'daniel.cruz@example.com' },
+      { name:'Bianca Claire Mendoza', course:'BS Computer Science', gender:'Female', year:'2024-2025', email:'bianca.mendoza@example.com' },
+      { name:'Nathaniel Reyes', course:'BS Computer Science', gender:'Male', year:'2024-2025', email:'nathaniel.reyes@example.com' },
+      { name:'Camille Joy Villanueva', course:'BS Computer Science', gender:'Female', year:'2024-2025', email:'camille.villanueva@example.com' },
+      { name:'Jayson Lee Ramos', course:'BS Computer Science', gender:'Male', year:'2024-2025', email:'jayson.ramos@example.com' },
+      { name:'Grace Anne Lim', course:'BS Computer Science', gender:'Female', year:'2024-2025', email:'grace.lim@example.com' },
 
-      { name:'Elijah James Garcia', course:'BS Information Technology', gender:'Male', year:2020, email:'elijah.garcia@example.com' },
-      { name:'Mia Grace Torres', course:'BS Information Technology', gender:'Female', year:2021, email:'mia.torres@example.com' },
-      { name:'Jericho David Aquino', course:'BS Information Technology', gender:'Male', year:2019, email:'jericho.aquino@example.com' },
-      { name:'Patricia Rose Santos', course:'BS Information Technology', gender:'Female', year:2022, email:'patricia.santos@example.com' },
-      { name:'Adrian Paul Umali', course:'BS Information Technology', gender:'Male', year:2020, email:'adrian.umali@example.com' },
-      { name:'Karen Jane Lopez', course:'BS Information Technology', gender:'Female', year:2021, email:'karen.lopez@example.com' },
-      { name:'Marcus Daniel Ferrer', course:'BS Information Technology', gender:'Male', year:2022, email:'marcus.ferrer@example.com' },
-      { name:'Celine Marie Abad', course:'BS Information Technology', gender:'Female', year:2020, email:'celine.abad@example.com' },
-      { name:'Rafael M. Gonzales', course:'BS Information Technology', gender:'Male', year:2019, email:'rafael.gonzales@example.com' },
-      { name:'Angela Mae Dizon', course:'BS Information Technology', gender:'Female', year:2021, email:'angela.dizon@example.com' },
+      { name:'Elijah James Garcia', course:'BS Information Technology', gender:'Male', year:'2024-2025', email:'elijah.garcia@example.com' },
+      { name:'Mia Grace Torres', course:'BS Information Technology', gender:'Female', year:'2024-2025', email:'mia.torres@example.com' },
+      { name:'Jericho David Aquino', course:'BS Information Technology', gender:'Male', year:'2024-2025', email:'jericho.aquino@example.com' },
+      { name:'Patricia Rose Santos', course:'BS Information Technology', gender:'Female', year:'2024-2025', email:'patricia.santos@example.com' },
+      { name:'Adrian Paul Umali', course:'BS Information Technology', gender:'Male', year:'2024-2025', email:'adrian.umali@example.com' },
+      { name:'Karen Jane Lopez', course:'BS Information Technology', gender:'Female', year:'2024-2025', email:'karen.lopez@example.com' },
+      { name:'Marcus Daniel Ferrer', course:'BS Information Technology', gender:'Male', year:'2024-2025', email:'marcus.ferrer@example.com' },
+      { name:'Celine Marie Abad', course:'BS Information Technology', gender:'Female', year:'2024-2025', email:'celine.abad@example.com' },
+      { name:'Rafael M. Gonzales', course:'BS Information Technology', gender:'Male', year:'2024-2025', email:'rafael.gonzales@example.com' },
+      { name:'Angela Mae Dizon', course:'BS Information Technology', gender:'Female', year:'2024-2025', email:'angela.dizon@example.com' },
 
-      { name:'Kyle Ian Cervantes', course:'BS Information System', gender:'Male', year:2020, email:'kyle.cervantes@example.com' },
-      { name:'Andrea Nicole Salazar', course:'BS Information System', gender:'Female', year:2021, email:'andrea.salazar@example.com' },
-      { name:'Vincent Carl De Leon', course:'BS Information System', gender:'Male', year:2019, email:'vincent.deleon@example.com' },
-      { name:'Rosemarie Anne Panganiban', course:'BS Information System', gender:'Female', year:2022, email:'rosemarie.panganiban@example.com' },
-      { name:'Kenneth James Tan', course:'BS Information System', gender:'Male', year:2020, email:'kenneth.tan@example.com' },
-      { name:'Janice Mae Francisco', course:'BS Information System', gender:'Female', year:2021, email:'janice.francisco@example.com' },
-      { name:'Joshua Daniel Yu', course:'BS Information System', gender:'Male', year:2022, email:'joshua.yu@example.com' },
-      { name:'Rhea Patricia Reyes', course:'BS Information System', gender:'Female', year:2020, email:'rhea.reyes@example.com' },
-      { name:'Marco Luigi Ramos', course:'BS Information System', gender:'Male', year:2019, email:'marco.ramos@example.com' },
-      { name:'Danielle Claire Matias', course:'BS Information System', gender:'Female', year:2021, email:'danielle.matias@example.com' }
+      { name:'Kyle Ian Cervantes', course:'BS Information System', gender:'Male', year:'2024-2025', email:'kyle.cervantes@example.com' },
+      { name:'Andrea Nicole Salazar', course:'BS Information System', gender:'Female', year:'2024-2025', email:'andrea.salazar@example.com' },
+      { name:'Vincent Carl De Leon', course:'BS Information System', gender:'Male', year:'2024-2025', email:'vincent.deleon@example.com' },
+      { name:'Rosemarie Anne Panganiban', course:'BS Information System', gender:'Female', year:'2024-2025', email:'rosemarie.panganiban@example.com' },
+      { name:'Kenneth James Tan', course:'BS Information System', gender:'Male', year:'2024-2025', email:'kenneth.tan@example.com' },
+      { name:'Janice Mae Francisco', course:'BS Information System', gender:'Female', year:'2024-2025', email:'janice.francisco@example.com' },
+      { name:'Joshua Daniel Yu', course:'BS Information System', gender:'Male', year:'2024-2025', email:'joshua.yu@example.com' },
+      { name:'Rhea Patricia Reyes', course:'BS Information System', gender:'Female', year:'2024-2025', email:'rhea.reyes@example.com' },
+      { name:'Marco Luigi Ramos', course:'BS Information System', gender:'Male', year:'2024-2025', email:'marco.ramos@example.com' },
+      { name:'Danielle Claire Matias', course:'BS Information System', gender:'Female', year:'2024-2025', email:'danielle.matias@example.com' }
     ];
 
     const $ = id => document.getElementById(id);
@@ -335,11 +335,12 @@
         name: $('firstName').value.trim() + ' ' + $('lastName').value.trim(),
         course: $('course').value,
         gender: $('gender').value,
-        year: Number($('graduation').value),
+        year: $('graduation').value.trim() || '2024-2025',
         email: $('email').value.trim()
       });
       save();
       e.target.reset();
+      $('graduation').value = '2024-2025';
       render();
       renderDashboard();
       renderReports();
