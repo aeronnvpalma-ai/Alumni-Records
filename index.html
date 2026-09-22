@@ -1,30 +1,328 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Implementation Of A Web Based Alumni Database Management System</title>
-<style>
-:root{--blue:#0b5ed7;--navy:#082f6b;--bg:#f4f6f9;--muted:#6b7280;--danger:#dc3545;--line:#dfe7f3}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#1f2937;font:15px Arial,sans-serif}button,input,select{font:inherit}button{cursor:pointer}.login-page{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,var(--blue),var(--navy))}.login-box{width:min(430px,100%);padding:40px;background:#fff;border-radius:18px}.logo{text-align:center;color:var(--navy)}.form-group{margin:18px 0}.form-group label{display:block;margin-bottom:8px;font-weight:bold}.form-group input,.form-group select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px}.primary-btn,.secondary-btn,.action-btn{border:0;border-radius:10px;padding:11px 16px;font-weight:bold}.primary-btn{background:var(--blue);color:#fff}.secondary-btn{background:#eef4ff;color:var(--navy)}.action-btn{background:var(--danger);color:#fff;padding:8px 10px}.forgot-link{display:inline-block;margin-top:14px;color:var(--blue)}.reset-message{display:none;margin-top:15px;color:#198754}.reset-message.visible{display:block}#system{display:none;min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:260px;padding:20px;background:var(--navy);color:#fff}.brand{text-align:center}.menu{list-style:none;padding:0;display:grid;gap:8px}.menu button{width:100%;padding:12px;text-align:left;color:#fff;background:transparent;border:0;border-radius:10px;font-weight:bold}.menu button.active,.menu button:hover{background:#ffffff1f}.content{margin-left:260px;padding:24px}.topbar,.card,.table-box,.form-box,.report-card,.settings-box{background:#fff;padding:20px;border-radius:14px;margin-bottom:20px}.topbar{display:flex;justify-content:space-between}.page{display:none}.page.active{display:block}.cards,.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}.card h3{color:var(--muted);margin:0}.value{font-size:2rem;color:var(--navy);font-weight:bold;margin-top:12px}.table-header{margin-bottom:15px}table{width:100%;border-collapse:collapse}th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left}.search{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:14px}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}.setting{display:grid;gap:8px;margin-bottom:18px}.setting input{padding:12px;border:1px solid var(--line);border-radius:10px}@media(max-width:840px){.sidebar{position:static;width:100%}.content{margin:0;padding:20px}.topbar{display:block}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Implementation Of A Web Based Alumni Database Management System</title>
+  <style>
+    :root {
+      --blue:#0b5ed7; --navy:#082f6b; --bg:#f4f6f9; --muted:#6b7280; --line:#dfe7f3; --danger:#dc3545;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:#1f2937; font:15px Arial, sans-serif; }
+    button,input,select { font:inherit; }
+    .login-page { min-height:100vh; display:grid; place-items:center; padding:20px; background:linear-gradient(135deg, var(--blue), var(--navy)); }
+    .login-box { width:min(430px,100%); background:#fff; padding:40px; border-radius:18px; box-shadow:0 12px 30px rgba(0,0,0,.18); }
+    .logo h1 { text-align:center; color:var(--navy); margin:0 0 10px; font-size:1.8rem; }
+    .logo p { text-align:center; color:var(--muted); margin:0 0 20px; }
+    .form-group { margin-bottom:18px; }
+    .form-group label { display:block; margin-bottom:8px; font-weight:bold; }
+    .form-group input, .form-group select { width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; }
+    .primary-btn, .secondary-btn, .action-btn { border:0; border-radius:10px; padding:11px 16px; font-weight:bold; cursor:pointer; }
+    .primary-btn { background:var(--blue); color:#fff; }
+    .secondary-btn { background:#eef4ff; color:var(--navy); }
+    .primary-btn:hover { opacity:.95; }
+    .forgot-link { display:inline-block; margin-top:14px; color:var(--blue); }
+    .reset-message { display:none; margin-top:15px; color:#198754; }
+    .reset-message.visible { display:block; }
+    #system { display:none; min-height:100vh; }
+    .sidebar { position:fixed; inset:0 auto 0 0; width:260px; padding:20px; background:var(--navy); color:#fff; }
+    .brand { text-align:center; }
+    .brand h2 { margin:0 0 8px; font-size:1.5rem; }
+    .brand p { margin:0 0 24px; color:#dfe7ff; }
+    .menu { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+    .menu button { width:100%; padding:12px; text-align:left; color:#fff; background:transparent; border:0; border-radius:10px; font-weight:bold; }
+    .menu button.active, .menu button:hover { background:#ffffff1a; }
+    .content { margin-left:260px; padding:24px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; background:#fff; padding:20px; border-radius:14px; margin-bottom:20px; }
+    .page { display:none; }
+    .page.active { display:block; }
+    .cards, .report-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:18px; }
+    .card, .report-card, .table-box, .form-box, .settings-box { background:#fff; padding:20px; border-radius:14px; margin-bottom:20px; }
+    .card h3, .report-card h3 { margin:0; color:var(--muted); }
+    .value { font-size:2rem; font-weight:bold; color:var(--navy); margin-top:12px; }
+    .table-header { margin-bottom:15px; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { padding:12px 10px; border-bottom:1px solid var(--line); text-align:left; }
+    .search { width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; margin-bottom:14px; }
+    .form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; }
+    .settings { display:grid; gap:8px; }
+    .settings input { padding:12px; border:1px solid var(--line); border-radius:10px; }
+    @media (max-width:840px) {
+      .sidebar { position:static; width:100%; }
+      .content { margin-left:0; padding:20px; }
+    }
+  </style>
 </head>
 <body>
-<div class="login-page" id="loginPage"><div class="login-box"><div class="logo"><h1>Implementation Of A Web Based Alumni Database Management System</h1><p>Management System</p></div><form id="loginForm"><div class="form-group"><label for="username">Username</label><input id="username" required></div><div class="form-group"><label for="password">Password</label><input id="password" type="password" required></div><button class="primary-btn" type="submit">Login</button><br><a class="forgot-link" href="#" id="forgotPassword">Forgot password?</a></form><p id="resetMessage" class="reset-message"></p></div></div>
-<div id="system"><aside class="sidebar"><div class="brand"><h2>Implementation Of A Web Based Alumni Database Management System</h2><p>Management System</p></div><nav><ul class="menu"><li><button data-page="dashboard" class="active">Dashboard</button></li><li><button data-page="alumni">Alumni Records</button></li><li><button data-page="addAlumni">Add Alumni</button></li><li><button data-page="search">Search Alumni</button></li><li><button data-page="reports">Reports</button></li><li><button data-page="users">User Management</button></li><li><button data-page="settings">Settings</button></li><li><button id="logoutBtn" class="secondary-btn">Logout</button></li></ul></nav></aside><main class="content"><header class="topbar"><strong>Implementation Of A Web Based Alumni Database Management System</strong><span>Welcome, <b id="currentUser">Administrator</b></span></header>
-<section id="dashboard" class="page active"><h1>Implementation Of A Web Based Alumni Database Management System</h1><p>Overview of the Alumni Records Management System</p><div class="cards"><div class="card"><h3>Total Alumni</h3><div class="value" id="totalAlumni">0</div></div><div class="card"><h3>Male</h3><div class="value" id="maleCount">0</div></div><div class="card"><h3>Female</h3><div class="value" id="femaleCount">0</div></div><div class="card"><h3>System Users</h3><div class="value" id="totalUsers">1</div></div></div></section>
-<section id="alumni" class="page"><h1>Alumni Records</h1><div class="table-box"><div class="table-header"><h2>Alumni List</h2></div><table><thead><tr><th>Name</th><th>Course</th><th>Gender</th><th>Year</th><th>Email</th><th>Action</th></tr></thead><tbody id="alumniTable"></tbody></table></div></section>
-<section id="addAlumni" class="page"><h1>Add Alumni</h1><div class="form-box"><form id="alumniForm"><div class="form-grid"><div class="form-group"><label for="firstName">First Name</label><input id="firstName" required></div><div class="form-group"><label for="lastName">Last Name</label><input id="lastName" required></div><div class="form-group"><label for="course">Course</label><select id="course" required><option value="">Select course</option><option>BS Information Technology</option><option>BS Computer Science</option><option>BS Information System</option></select></div><div class="form-group"><label for="gender">Gender</label><select id="gender"><option>Male</option><option>Female</option></select></div><div class="form-group"><label for="graduation">Graduation Year</label><input id="graduation" type="number" required></div><div class="form-group"><label for="email">Email</label><input id="email" type="email" required></div></div><button class="primary-btn" type="submit">Add Alumni</button></form></div></section>
-<section id="search" class="page"><h1>Search Alumni</h1><div class="table-box"><input class="search" id="searchInput" placeholder="Search by name, course, year, or email"><table><thead><tr><th>Name</th><th>Course</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="searchTable"></tbody></table></div></section>
-<section id="reports" class="page"><h1>Reports</h1><div class="report-grid" id="reportGrid"></div></section>
-<section id="users" class="page"><h1>User Management</h1><div class="table-box"><table><thead><tr><th>Username</th><th>Role</th><th>Status</th></tr></thead><tbody id="usersTable"><tr><td>admin</td><td>Administrator</td><td>Active</td></tr></tbody></table></div></section>
-<section id="settings" class="page"><h1>Settings</h1><div class="settings-box"><div class="setting"><label for="systemName">System Name</label><input id="systemName" value="Implementation Of A Web Based Alumni Database Management System"></div><button class="primary-btn" id="saveSettings" type="button">Save Settings</button></div></section>
-</main></div>
-<script>
-const starter=[{name:'Alyssa Mae Dela Cruz',course:'BS Computer Science',gender:'Female',year:2020,email:'alyssa.dela.cruz@example.com'},{name:'Mark Joseph Santos',course:'BS Computer Science',gender:'Male',year:2021,email:'mark.santos@example.com'},{name:'Elijah James Garcia',course:'BS Information Technology',gender:'Male',year:2020,email:'elijah.garcia@example.com'},{name:'Mia Grace Torres',course:'BS Information Technology',gender:'Female',year:2021,email:'mia.torres@example.com'},{name:'Kyle Ian Cervantes',course:'BS Information System',gender:'Male',year:2020,email:'kyle.cervantes@example.com'},{name:'Andrea Nicole Salazar',course:'BS Information System',gender:'Female',year:2021,email:'andrea.salazar@example.com'}];
-const $=id=>document.getElementById(id);function load(){try{return JSON.parse(localStorage.getItem('alumniRecords'))||starter}catch(e){return starter}}let alumni=load();function save(){try{localStorage.setItem('alumniRecords',JSON.stringify(alumni))}catch(e){}}function cell(value){const td=document.createElement('td');td.textContent=value;return td}
-function render(filter=''){const q=filter.toLowerCase(),list=alumni.filter(a=>Object.values(a).some(v=>String(v).toLowerCase().includes(q)));$('alumniTable').replaceChildren();$('searchTable').replaceChildren();list.forEach(a=>{const tr=document.createElement('tr');[a.name,a.course,a.gender,a.year,a.email].forEach(v=>tr.appendChild(cell(v)));const action=document.createElement('td');const button=document.createElement('button');button.type='button';button.className='action-btn';button.textContent='Delete';button.onclick=()=>{if(confirm('Delete this alumni record?')){alumni.splice(alumni.indexOf(a),1);save();render($('searchInput').value);renderDashboard();renderReports()}};action.appendChild(button);tr.appendChild(action);$('alumniTable').appendChild(tr);const searchRow=document.createElement('tr');[a.name,a.course,a.gender,a.year,a.email].forEach(v=>searchRow.appendChild(cell(v)));$('searchTable').appendChild(searchRow)})}
-function renderDashboard(){$('totalAlumni').textContent=alumni.length;$('maleCount').textContent=alumni.filter(a=>a.gender==='Male').length;$('femaleCount').textContent=alumni.filter(a=>a.gender==='Female').length}function renderReports(){const cats=['BS Information Technology','BS Computer Science','BS Information System'];$('reportGrid').replaceChildren();[['Total Alumni',alumni.length],...cats.map(c=>[c,alumni.filter(a=>a.course===c).length])].forEach(([t,v])=>{const card=document.createElement('div');card.className='report-card';card.innerHTML='<h3>'+t+'</h3><p>'+v+'</p>';$('reportGrid').appendChild(card)})}function page(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id))}
-document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>page(b.dataset.page));$('searchInput').oninput=e=>render(e.target.value);$('loginForm').onsubmit=e=>{e.preventDefault();if($('username').value.trim()==='admin'&&$('password').value==='admin'){$('loginPage').style.display='none';$('system').style.display='block'}else alert('Invalid username or password.')};$('logoutBtn').onclick=()=>{$('system').style.display='none';$('loginPage').style.display='grid';$('loginForm').reset()};$('forgotPassword').onclick=e=>{e.preventDefault();$('resetMessage').textContent='Password reset instructions were sent to admin@alumni.local.';$('resetMessage').classList.add('visible')};$('alumniForm').onsubmit=e=>{e.preventDefault();alumni.push({name:$('firstName').value.trim()+' '+$('lastName').value.trim(),course:$('course').value,gender:$('gender').value,year:Number($('graduation').value),email:$('email').value.trim()});save();e.target.reset();render();renderDashboard();renderReports();page('alumni')};$('saveSettings').onclick=()=>{document.title=$('systemName').value.trim()||document.title;alert('Settings saved.')};render();renderDashboard();renderReports();
-</script>
+  <div class="login-page" id="loginPage">
+    <div class="login-box">
+      <div class="logo">
+        <h1>Implementation Of A Web Based Alumni Database Management System</h1>
+        <p>Management System</p>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input id="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" required>
+        </div>
+        <button class="primary-btn" type="submit">Login</button><br>
+        <a href="#" class="forgot-link" id="forgotPassword">Forgot password</a>
+      </form>
+      <p id="resetMessage" class="reset-message">Password reset instructions were sent to admin@alumni.local.</p>
+    </div>
+  </div>
+
+  <div id="system">
+    <aside class="sidebar">
+      <div class="brand">
+        <h2>Implementation Of A Web Based Alumni Database Management System</h2>
+        <p>Management System</p>
+      </div>
+      <nav>
+        <ul class="menu">
+          <li><button data-page="dashboard" class="active">Dashboard</button></li>
+          <li><button data-page="alumni">Alumni Records</button></li>
+          <li><button data-page="addAlumni">Add Alumni</button></li>
+          <li><button data-page="search">Search Alumni</button></li>
+          <li><button data-page="reports">Reports</button></li>
+          <li><button data-page="users">User Management</button></li>
+          <li><button data-page="settings">Settings</button></li>
+          <li><button id="logoutBtn" class="secondary-btn">Logout</button></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <strong>Implementation Of A Web Based Alumni Database Management System</strong>
+        <span>Welcome, <b id="currentUser">Administrator</b></span>
+      </header>
+
+      <section id="dashboard" class="page active">
+        <h1>Implementation Of A Web Based Alumni Database Management System</h1>
+        <p>Overview of the Alumni Records Management System</p>
+        <div class="cards">
+          <div class="card"><h3>Total Alumni</h3><div class="value" id="totalAlumni">0</div></div>
+          <div class="card"><h3>Male</h3><div class="value" id="maleCount">0</div></div>
+          <div class="card"><h3>Female</h3><div class="value" id="femaleCount">0</div></div>
+          <div class="card"><h3>System Users</h3><div class="value" id="totalUsers">1</div></div>
+        </div>
+      </section>
+
+      <section id="alumni" class="page">
+        <h1>Alumni Records</h1>
+        <div class="table-box">
+          <div class="table-header"><h2>Alumni List</h2></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th><th>Course</th><th>Gender</th><th>Year</th><th>Email</th>
+              </tr>
+            </thead>
+            <tbody id="alumniTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="addAlumni" class="page">
+        <h1>Add Alumni</h1>
+        <div class="form-box">
+          <form id="alumniForm">
+            <div class="form-grid">
+              <div class="form-group"><label for="firstName">First Name</label><input id="firstName" required></div>
+              <div class="form-group"><label for="lastName">Last Name</label><input id="lastName" required></div>
+              <div class="form-group"><label for="course">Course</label>
+                <select id="course" required>
+                  <option value="">Select course</option>
+                  <option>BS Information Technology</option>
+                  <option>BS Computer Science</option>
+                  <option>BS Information System</option>
+                </select>
+              </div>
+              <div class="form-group"><label for="gender">Gender</label>
+                <select id="gender">
+                  <option>Male</option>
+                  <option>Female</option>
+                </select>
+              </div>
+              <div class="form-group"><label for="graduation">Graduation Year</label><input id="graduation" type="number" required></div>
+              <div class="form-group"><label for="email">Email</label><input id="email" type="email" required></div>
+            </div>
+            <button class="primary-btn" type="submit">Add Alumni</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="search" class="page">
+        <h1>Search Alumni</h1>
+        <div class="table-box">
+          <input class="search" id="searchInput" placeholder="Search by name, course, year, or email">
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Course</th><th>Gender</th><th>Year</th><th>Email</th></tr>
+            </thead>
+            <tbody id="searchTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="reports" class="page">
+        <h1>Reports</h1>
+        <div class="report-grid" id="reportGrid"></div>
+      </section>
+
+      <section id="users" class="page">
+        <h1>User Management</h1>
+        <div class="table-box">
+          <table>
+            <thead><tr><th>Username</th><th>Role</th><th>Status</th></tr></thead>
+            <tbody id="usersTable"><tr><td>admin</td><td>Administrator</td><td>Active</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="settings" class="page">
+        <h1>Settings</h1>
+        <div class="settings-box">
+          <div class="settings">
+            <label for="systemName">System Name</label>
+            <input id="systemName" value="Implementation Of A Web Based Alumni Database Management System">
+          </div>
+          <button class="primary-btn" id="saveSettings" type="button">Save Settings</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const starter = [
+      { name:'Alyssa Mae Dela Cruz', course:'BS Computer Science', gender:'Female', year:2020, email:'alyssa.dela.cruz@example.com' },
+      { name:'Mark Joseph Santos', course:'BS Computer Science', gender:'Male', year:2021, email:'mark.santos@example.com' },
+      { name:'Elijah James Garcia', course:'BS Information Technology', gender:'Male', year:2020, email:'elijah.garcia@example.com' },
+      { name:'Mia Grace Torres', course:'BS Information Technology', gender:'Female', year:2021, email:'mia.torres@example.com' },
+      { name:'Kyle Ian Cervantes', course:'BS Information System', gender:'Male', year:2020, email:'kyle.cervantes@example.com' },
+      { name:'Andrea Nicole Salazar', course:'BS Information System', gender:'Female', year:2021, email:'andrea.salazar@example.com' }
+    ];
+
+    const $ = id => document.getElementById(id);
+
+    function load() {
+      try {
+        return JSON.parse(localStorage.getItem('alumniRecords')) || starter;
+      } catch (e) {
+        return starter;
+      }
+    }
+
+    let alumni = load();
+
+    function save() {
+      try {
+        localStorage.setItem('alumniRecords', JSON.stringify(alumni));
+      } catch (e) {}
+    }
+
+    function cell(value) {
+      const td = document.createElement('td');
+      td.textContent = value;
+      return td;
+    }
+
+    function render(filter = '') {
+      const q = filter.toLowerCase();
+      const list = alumni.filter(a => Object.values(a).some(v => String(v).toLowerCase().includes(q)));
+
+      $('alumniTable').replaceChildren();
+      $('searchTable').replaceChildren();
+
+      list.forEach(a => {
+        const tr = document.createElement('tr');
+        [a.name, a.course, a.gender, a.year, a.email].forEach(v => tr.appendChild(cell(v)));
+        $('alumniTable').appendChild(tr);
+
+        const searchRow = document.createElement('tr');
+        [a.name, a.course, a.gender, a.year, a.email].forEach(v => searchRow.appendChild(cell(v)));
+        $('searchTable').appendChild(searchRow);
+      });
+    }
+
+    function renderDashboard() {
+      $('totalAlumni').textContent = alumni.length;
+      $('maleCount').textContent = alumni.filter(a => a.gender === 'Male').length;
+      $('femaleCount').textContent = alumni.filter(a => a.gender === 'Female').length;
+    }
+
+    function renderReports() {
+      const cats = ['BS Information Technology', 'BS Computer Science', 'BS Information System'];
+      $('reportGrid').replaceChildren();
+      [['Total Alumni', alumni.length], ...cats.map(c => [c, alumni.filter(a => a.course === c).length])].forEach(([t, v]) => {
+        const card = document.createElement('div');
+        card.className = 'report-card';
+        card.innerHTML = '<h3>' + t + '</h3><p>' + v + '</p>';
+        $('reportGrid').appendChild(card);
+      });
+    }
+
+    function page(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id));
+      document.querySelectorAll('[data-page]').forEach(b => b.classList.toggle('active', b.dataset.page === id));
+    }
+
+    document.querySelectorAll('[data-page]').forEach(b => b.onclick = () => page(b.dataset.page));
+    $('searchInput').oninput = e => render(e.target.value);
+
+    $('loginForm').onsubmit = e => {
+      e.preventDefault();
+      if ($('username').value.trim() === 'admin' && $('password').value === 'admin') {
+        $('loginPage').style.display = 'none';
+        $('system').style.display = 'block';
+      } else {
+        alert('Invalid username or password.');
+      }
+    };
+
+    $('logoutBtn').onclick = () => {
+      $('system').style.display = 'none';
+      $('loginPage').style.display = 'grid';
+      $('loginForm').reset();
+    };
+
+    $('forgotPassword').onclick = e => {
+      e.preventDefault();
+      $('resetMessage').textContent = 'Password reset instructions were sent to admin@alumni.local.';
+      $('resetMessage').classList.add('visible');
+    };
+
+    $('alumniForm').onsubmit = e => {
+      e.preventDefault();
+      alumni.push({
+        name: $('firstName').value.trim() + ' ' + $('lastName').value.trim(),
+        course: $('course').value,
+        gender: $('gender').value,
+        year: Number($('graduation').value),
+        email: $('email').value.trim()
+      });
+      save();
+      e.target.reset();
+      render();
+      renderDashboard();
+      renderReports();
+      page('alumni');
+    };
+
+    $('saveSettings').onclick = () => {
+      document.title = $('systemName').value.trim() || document.title;
+      alert('Settings saved.');
+    };
+
+    render();
+    renderDashboard();
+    renderReports();
+  </script>
 </body>
 </html>
