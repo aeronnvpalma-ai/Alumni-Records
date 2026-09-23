@@ -118,15 +118,40 @@
 
       <section id="alumni" class="page">
         <h1>Alumni Records</h1>
+
         <div class="table-box">
-          <div class="table-header"><h2>Alumni List</h2></div>
+          <div class="table-header"><h2>BS Computer Science</h2></div>
           <table>
             <thead>
               <tr>
-                <th>Name</th><th>Course</th><th>Gender</th><th>Year</th><th>Email</th>
+                <th>Name</th><th>Gender</th><th>Year</th><th>Email</th>
               </tr>
             </thead>
-            <tbody id="alumniTable"></tbody>
+            <tbody id="csTable"></tbody>
+          </table>
+        </div>
+
+        <div class="table-box">
+          <div class="table-header"><h2>BS Information Technology</h2></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th><th>Gender</th><th>Year</th><th>Email</th>
+              </tr>
+            </thead>
+            <tbody id="itTable"></tbody>
+          </table>
+        </div>
+
+        <div class="table-box">
+          <div class="table-header"><h2>BS Information System</h2></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th><th>Gender</th><th>Year</th><th>Email</th>
+              </tr>
+            </thead>
+            <tbody id="isTable"></tbody>
           </table>
         </div>
       </section>
@@ -243,6 +268,12 @@
     ];
 
     const $ = id => document.getElementById(id);
+    const courseOrder = ['BS Computer Science', 'BS Information Technology', 'BS Information System'];
+    const courseTableIds = {
+      'BS Computer Science': 'csTable',
+      'BS Information Technology': 'itTable',
+      'BS Information System': 'isTable'
+    };
 
     function load() {
       try {
@@ -270,17 +301,26 @@
       const q = filter.toLowerCase();
       const list = alumni.filter(a => Object.values(a).some(v => String(v).toLowerCase().includes(q)));
 
-      $('alumniTable').replaceChildren();
       $('searchTable').replaceChildren();
+      courseOrder.forEach(course => {
+        const tbody = $(courseTableIds[course]);
+        if (!tbody) return;
+        tbody.replaceChildren();
+
+        alumni
+          .filter(a => a.course === course)
+          .filter(a => Object.values(a).some(v => String(v).toLowerCase().includes(q)))
+          .forEach(a => {
+            const tr = document.createElement('tr');
+            [a.name, a.gender, a.year, a.email].forEach(v => tr.appendChild(cell(v)));
+            tbody.appendChild(tr);
+          });
+      });
 
       list.forEach(a => {
         const tr = document.createElement('tr');
         [a.name, a.course, a.gender, a.year, a.email].forEach(v => tr.appendChild(cell(v)));
-        $('alumniTable').appendChild(tr);
-
-        const searchRow = document.createElement('tr');
-        [a.name, a.course, a.gender, a.year, a.email].forEach(v => searchRow.appendChild(cell(v)));
-        $('searchTable').appendChild(searchRow);
+        $('searchTable').appendChild(tr);
       });
     }
 
