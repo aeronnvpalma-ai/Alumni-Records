@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Announcements | Alumni Records</title>
+  <style>
+    :root { --blue:#0b5ed7; --navy:#082f6b; --bg:#f4f6f9; --muted:#6b7280; --line:#dfe7f3; --danger:#dc3545; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:#1f2937; font:15px Arial,sans-serif; }
+    button,input,select,textarea { font:inherit; }
+    .layout { min-height:100vh; display:flex; }
+    aside { width:260px; flex:none; padding:24px 20px; background:var(--navy); color:#fff; }
+    aside h1 { margin:0 0 8px; font-size:1.45rem; text-align:center; }
+    aside p { margin:0 0 28px; color:#dfe7ff; text-align:center; }
+    nav a { display:block; padding:12px 14px; border-radius:10px; color:#fff; text-decoration:none; font-weight:bold; }
+    nav a:hover, nav a.active { background:#ffffff1a; }
+    main { flex:1; padding:24px; max-width:1100px; }
+    .topbar,.panel,.announcement { background:#fff; border-radius:14px; padding:20px; margin-bottom:20px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:16px; }
+    .topbar h2 { margin:0; color:var(--navy); }
+    .muted { color:var(--muted); }
+    .form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; }
+    label { display:block; margin-bottom:8px; font-weight:bold; }
+    input,select,textarea { width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; }
+    textarea { min-height:130px; resize:vertical; }
+    .full { grid-column:1/-1; }
+    .primary,.danger { border:0; border-radius:10px; padding:11px 16px; color:#fff; font-weight:bold; cursor:pointer; }
+    .primary { background:var(--blue); }
+    .danger { background:var(--danger); }
+    .form-actions { display:flex; gap:10px; margin-top:4px; }
+    .announcement-list { display:grid; gap:16px; }
+    .announcement { border:1px solid var(--line); margin:0; }
+    .announcement-header { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+    .announcement h3 { margin:0 0 8px; color:var(--navy); }
+    .announcement p { margin:0; white-space:pre-wrap; line-height:1.55; }
+    .announcement-meta { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; color:var(--muted); font-size:.9rem; }
+    .badge { padding:4px 9px; border-radius:999px; background:#e8f0ff; color:var(--blue); font-weight:bold; }
+    .empty { padding:30px; text-align:center; color:var(--muted); }
+    @media (max-width:760px) { .layout { display:block; } aside { width:100%; } main { padding:16px; } .topbar,.announcement-header { display:block; } .topbar button { margin-top:14px; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <h1>Alumni Records</h1>
+      <p>Management System</p>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="announcements.html" class="active">Announcements</a>
+      </nav>
+    </aside>
+    <main>
+      <header class="topbar">
+        <div><h2>Announcements</h2><div class="muted">Share important updates, events, and opportunities with alumni.</div></div>
+        <button class="primary" id="focusForm" type="button">Create Announcement</button>
+      </header>
+
+      <section class="panel" id="announcementFormPanel">
+        <h2 id="formTitle">Create an announcement</h2>
+        <form id="announcementForm">
+          <div class="form-grid">
+            <div><label for="title">Title</label><input id="title" required placeholder="e.g. Alumni Homecoming 2025"></div>
+            <div><label for="category">Category</label><select id="category"><option>General</option><option>Event</option><option>Opportunity</option><option>Important</option></select></div>
+            <div><label for="date">Publish date</label><input id="date" type="date" required></div>
+            <div><label for="author">Posted by</label><input id="author" value="Administrator" required></div>
+            <div class="full"><label for="message">Message</label><textarea id="message" required placeholder="Write the announcement details here..."></textarea></div>
+          </div>
+          <div class="form-actions"><button class="primary" type="submit" id="saveButton">Publish Announcement</button><button type="button" id="cancelButton">Clear</button></div>
+        </form>
+      </section>
+
+      <section>
+        <h2>Published announcements</h2>
+        <div class="announcement-list" id="announcementList"></div>
+      </section>
+    </main>
+  </div>
+  <script>
+    const $ = id => document.getElementById(id);
+    const storageKey = 'alumniAnnouncements';
+    const initialAnnouncements = [{ id:1, title:'Welcome to the Alumni Records System', category:'General', date:new Date().toISOString().slice(0,10), author:'Administrator', message:'Stay connected with your fellow alumni and check this page regularly for news, events, and opportunities.' }];
+    let announcements = loadAnnouncements();
+    let editingId = null;
+
+    function loadAnnouncements() {
+      try { return JSON.parse(localStorage.getItem(storageKey)) || initialAnnouncements; } catch (error) { return initialAnnouncements; }
+    }
+    function saveAnnouncements() { localStorage.setItem(storageKey, JSON.stringify(announcements)); }
+    function formatDate(value) { return new Date(value + 'T00:00:00').toLocaleDateString(undefined, { year:'numeric', month:'long', day:'numeric' }); }
+    function render() {
+      const list = $('announcementList');
+      list.replaceChildren();
+      if (!announcements.length) { list.innerHTML = '<div class="panel empty">No announcements have been published yet.</div>'; return; }
+      [...announcements].sort((a,b) => b.date.localeCompare(a.date) || b.id-a.id).forEach(item => {
+        const article = document.createElement('article'); article.className = 'announcement';
+        article.innerHTML = '<div class="announcement-header"><div><h3></h3><div class="announcement-meta"><span class="badge"></span><span class="announcement-date"></span><span class="announcement-author"></span></div></div><div class="form-actions"><button class="primary edit" type="button">Edit</button><button class="danger delete" type="button">Delete</button></div></div><p class="announcement-message"></p>';
+        article.querySelector('h3').textContent = item.title;
+        article.querySelector('.badge').textContent = item.category;
+        article.querySelector('.announcement-date').textContent = formatDate(item.date);
+        article.querySelector('.announcement-author').textContent = 'By ' + item.author;
+        article.querySelector('.announcement-message').textContent = item.message;
+        article.querySelector('.edit').onclick = () => editAnnouncement(item.id);
+        article.querySelector('.delete').onclick = () => deleteAnnouncement(item.id);
+        list.appendChild(article);
+      });
+    }
+    function resetForm() { editingId = null; $('announcementForm').reset(); $('date').value = new Date().toISOString().slice(0,10); $('author').value = 'Administrator'; $('formTitle').textContent = 'Create an announcement'; $('saveButton').textContent = 'Publish Announcement'; }
+    function editAnnouncement(id) {
+      const item = announcements.find(announcement => announcement.id === id); if (!item) return;
+      editingId = id; $('title').value=item.title; $('category').value=item.category; $('date').value=item.date; $('author').value=item.author; $('message').value=item.message;
+      $('formTitle').textContent = 'Edit announcement'; $('saveButton').textContent = 'Save Changes'; $('announcementFormPanel').scrollIntoView({ behavior:'smooth' });
+    }
+    function deleteAnnouncement(id) { if (!confirm('Delete this announcement?')) return; announcements = announcements.filter(item => item.id !== id); saveAnnouncements(); render(); if (editingId === id) resetForm(); }
+    $('announcementForm').onsubmit = event => {
+      event.preventDefault();
+      const item = { id: editingId || Date.now(), title:$('title').value.trim(), category:$('category').value, date:$('date').value, author:$('author').value.trim(), message:$('message').value.trim() };
+      if (editingId) announcements = announcements.map(existing => existing.id === editingId ? item : existing); else announcements.push(item);
+      saveAnnouncements(); render(); resetForm();
+    };
+    $('cancelButton').onclick = resetForm;
+    $('focusForm').onclick = () => { $('announcementFormPanel').scrollIntoView({ behavior:'smooth' }); $('title').focus(); };
+    resetForm(); render();
+  </script>
+</body>
+</html>
