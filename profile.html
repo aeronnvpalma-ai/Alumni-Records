@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile | Alumni Records</title>
+  <style>
+    :root { --blue:#0b5ed7; --navy:#082f6b; --bg:#f4f6f9; --muted:#6b7280; --line:#dfe7f3; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:#1f2937; font:15px Arial,sans-serif; }
+    header { background:linear-gradient(135deg,var(--blue),var(--navy)); color:#fff; padding:24px; }
+    header h1 { margin:0 0 8px; }
+    header a { color:#fff; }
+    main { max-width:900px; margin:0 auto; padding:24px; }
+    .tabs { display:flex; gap:10px; margin-bottom:20px; }
+    .tabs button { border:2px solid var(--line); background:#fff; border-radius:10px; padding:12px 18px; color:var(--navy); font-weight:bold; cursor:pointer; }
+    .tabs button.active { background:var(--blue); border-color:var(--blue); color:#fff; }
+    .panel { display:none; background:#fff; border-radius:14px; padding:24px; }
+    .panel.active { display:block; }
+    .profile-header { display:flex; align-items:center; gap:18px; border-bottom:1px solid var(--line); padding-bottom:20px; margin-bottom:20px; }
+    .avatar { width:76px; height:76px; display:grid; place-items:center; border-radius:50%; background:linear-gradient(135deg,var(--blue),var(--navy)); color:#fff; font-size:1.6rem; font-weight:bold; }
+    h2 { color:var(--navy); }
+    .details { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; }
+    .detail { border:1px solid var(--line); border-radius:10px; padding:14px; }
+    .detail strong { display:block; color:var(--muted); font-size:.85rem; margin-bottom:6px; }
+    .bio { color:var(--muted); line-height:1.5; }
+    .form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+    label { display:block; font-weight:bold; margin-bottom:8px; }
+    input, textarea { width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; font:inherit; }
+    textarea { min-height:120px; resize:vertical; }
+    .full { grid-column:1/-1; }
+    .save { margin-top:18px; background:var(--blue); color:#fff; border:0; border-radius:10px; padding:11px 16px; font-weight:bold; cursor:pointer; }
+    .message { color:#198754; font-weight:bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Profile</h1>
+    <a href="index.html">Back to Alumni Records</a>
+  </header>
+  <main>
+    <div class="tabs" role="tablist">
+      <button class="active" data-tab="profile" role="tab">Profile</button>
+      <button data-tab="edit" role="tab">Edit Profile</button>
+    </div>
+
+    <section id="profile-panel" class="panel active" role="tabpanel">
+      <div class="profile-header">
+        <div class="avatar" id="avatar">AD</div>
+        <div><h2 id="displayName">Administrator</h2><p id="displayRole">System Administrator</p></div>
+      </div>
+      <div class="details">
+        <div class="detail"><strong>Email</strong><span id="displayEmail">Not provided</span></div>
+        <div class="detail"><strong>Phone</strong><span id="displayPhone">Not provided</span></div>
+        <div class="detail"><strong>Location</strong><span id="displayLocation">Not provided</span></div>
+      </div>
+      <p class="bio" id="displayBio">No bio added yet.</p>
+    </section>
+
+    <section id="edit-panel" class="panel" role="tabpanel">
+      <h2>Edit Profile</h2>
+      <form id="profileForm">
+        <div class="form-grid">
+          <div><label for="name">Full Name</label><input id="name" required></div>
+          <div><label for="email">Email</label><input id="email" type="email" required></div>
+          <div><label for="role">Role</label><input id="role" required></div>
+          <div><label for="phone">Phone</label><input id="phone" type="tel"></div>
+          <div><label for="location">Location</label><input id="location"></div>
+          <div class="full"><label for="bio">Bio</label><textarea id="bio"></textarea></div>
+        </div>
+        <button class="save" type="submit">Save Profile</button>
+        <p class="message" id="message" role="status"></p>
+      </form>
+    </section>
+  </main>
+  <script>
+    const defaults = { name:'Administrator', email:'admin@alumni.local', role:'System Administrator', phone:'', location:'', bio:'' };
+    const profile = { ...defaults, ...JSON.parse(localStorage.getItem('adminProfile') || '{}') };
+    const $ = id => document.getElementById(id);
+    function render() {
+      $('displayName').textContent = profile.name || defaults.name;
+      $('displayRole').textContent = profile.role || defaults.role;
+      $('displayEmail').textContent = profile.email || 'Not provided';
+      $('displayPhone').textContent = profile.phone || 'Not provided';
+      $('displayLocation').textContent = profile.location || 'Not provided';
+      $('displayBio').textContent = profile.bio || 'No bio added yet.';
+      $('avatar').textContent = (profile.name || defaults.name).split(/\s+/).slice(0,2).map(part => part[0]).join('').toUpperCase();
+      ['name','email','role','phone','location','bio'].forEach(key => $(key).value = profile[key]);
+    }
+    document.querySelectorAll('[data-tab]').forEach(button => button.onclick = () => {
+      document.querySelectorAll('[data-tab]').forEach(item => item.classList.toggle('active', item === button));
+      document.querySelectorAll('.panel').forEach(panel => panel.classList.toggle('active', panel.id === button.dataset.tab + '-panel'));
+    });
+    $('profileForm').onsubmit = event => {
+      event.preventDefault();
+      ['name','email','role','phone','location','bio'].forEach(key => profile[key] = $(key).value.trim());
+      localStorage.setItem('adminProfile', JSON.stringify(profile));
+      render();
+      $('message').textContent = 'Profile updated successfully.';
+      document.querySelector('[data-tab="profile"]').click();
+    };
+    render();
+  </script>
+</body>
+</html>
