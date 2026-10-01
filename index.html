@@ -173,7 +173,7 @@
 
       <section id="users" class="page">
         <h1>User Management</h1>
-        <div class="table-box"><table><thead><tr><th>Username</th><th>Role</th><th>Status</th></tr></thead><tbody id="usersTable"><tr><td>admin</td><td>Administrator</td><td>Active</td></tr></tbody></table></div>
+        <div class="table-box"><table><thead><tr><th>Username</th><th>Role</th><th>Status</th></tr></thead><tbody id="usersTable"></tbody></table></div>
       </section>
 
       <section id="profile" class="page">
@@ -253,17 +253,29 @@
     const courseTableIds = { 'BS Computer Science':'csTable', 'BS Information Technology':'itTable', 'BS Information System':'isTable' };
     const defaultProfile = { name:'Administrator', email:'admin@alumni.local', role:'System Administrator', phone:'', location:'', bio:'Manage your account information and keep your contact details up to date.' };
 
+    const users = [
+      { username:'admin', password:'admin', name:'Administrator', email:'admin@alumni.local', role:'System Administrator', phone:'', location:'', bio:'' },
+      { username:'aeronn', password:'aeronn123', name:'Aeronn V Palma', email:'aeronn.palma@example.com', role:'Alumni Officer', phone:'', location:'', bio:'' },
+      { username:'lance', password:'lance123', name:'Lance Tormo', email:'lance.tormo@example.com', role:'Alumni Officer', phone:'', location:'', bio:'' },
+      { username:'angel', password:'angel123', name:'Angel Pagay', email:'angel.pagay@example.com', role:'Alumni Officer', phone:'', location:'', bio:'' }
+    ];
+
     function load() {
       try { return JSON.parse(localStorage.getItem('alumniRecords')) || starter; } catch (e) { return starter; }
     }
     function loadProfile() {
       try { return { ...defaultProfile, ...(JSON.parse(localStorage.getItem('adminProfile')) || {}) }; } catch (e) { return { ...defaultProfile }; }
     }
+    function loadUsers() {
+      try { return JSON.parse(localStorage.getItem('systemUsers')) || users; } catch (e) { return users; }
+    }
     let alumni = load();
     let profile = loadProfile();
+    let systemUsers = loadUsers();
 
     function save() { try { localStorage.setItem('alumniRecords', JSON.stringify(alumni)); } catch (e) {} }
     function saveProfile() { try { localStorage.setItem('adminProfile', JSON.stringify(profile)); } catch (e) {} }
+    function saveUsers() { try { localStorage.setItem('systemUsers', JSON.stringify(systemUsers)); } catch (e) {} }
     function cell(value) { const td = document.createElement('td'); td.textContent = value; return td; }
 
     function render(filter = '') {
@@ -316,6 +328,16 @@
       $('profileLocation').value = profile.location;
       $('profileBio').value = profile.bio;
     }
+    function renderUsers() {
+      const tbody = $('usersTable');
+      tbody.replaceChildren();
+      systemUsers.forEach(u => {
+        const tr = document.createElement('tr');
+        [u.username, u.role || 'Alumni Officer', 'Active'].forEach(v => tr.appendChild(cell(v)));
+        tbody.appendChild(tr);
+      });
+      $('totalUsers').textContent = systemUsers.length;
+    }
     function page(id) {
       document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id));
       document.querySelectorAll('[data-page]').forEach(b => b.classList.toggle('active', b.dataset.page === id));
@@ -327,12 +349,19 @@
 
     $('loginForm').onsubmit = e => {
       e.preventDefault();
-      if ($('username').value.trim() === 'admin' && $('password').value === 'admin') {
-        $('loginAlert').classList.remove('visible'); $('loginPage').style.display = 'none'; $('system').style.display = 'block'; renderProfile();
-      } else $('loginAlert').classList.add('visible');
+      const user = systemUsers.find(u => u.username === $('username').value.trim() && u.password === $('password').value);
+      if (user) {
+        $('loginAlert').classList.remove('visible');
+        $('loginPage').style.display = 'none';
+        $('system').style.display = 'block';
+        profile = { name: user.name, email: user.email, role: user.role, phone: user.phone || '', location: user.location || '', bio: user.bio || '' };
+        renderProfile();
+      } else {
+        $('loginAlert').classList.add('visible');
+      }
     };
     $('logoutBtn').onclick = () => { $('system').style.display = 'none'; $('loginPage').style.display = 'grid'; $('loginForm').reset(); $('loginAlert').classList.remove('visible'); };
-    $('forgotPassword').onclick = e => { e.preventDefault(); $('resetMessage').textContent = 'Password reset instructions were sent to admin@alumni.local.'; $('resetMessage').classList.add('visible'); };
+    $('forgotPassword').onclick = e => { e.preventDefault(); $('resetMessage').textContent = 'Password reset instructions were sent to ' + ($('username').value.trim() || 'your email') + '.'; $('resetMessage').classList.add('visible'); };
 
     $('profileForm').onsubmit = e => {
       e.preventDefault();
@@ -348,7 +377,7 @@
     };
     $('saveSettings').onclick = () => { document.title = $('systemName').value.trim() || document.title; alert('Settings saved.'); };
 
-    render(); renderDashboard(); renderReports(); renderProfile();
+    render(); renderDashboard(); renderReports(); renderProfile(); renderUsers();
   </script>
 </body>
 </html>
