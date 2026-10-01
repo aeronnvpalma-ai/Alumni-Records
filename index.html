@@ -155,7 +155,7 @@
             <div class="form-grid">
               <div class="form-group"><label for="firstName">First Name</label><input id="firstName" required></div>
               <div class="form-group"><label for="lastName">Last Name</label><input id="lastName" required></div>
-              <div class="form-group"><label for="course">Course</label><select id="course" required><option value="">Select course</option><option>BS Information Technology</option><option>BS Computer Science</option><option>BS Information System</option></select></div>
+              <div class="form-group"><label for="program">Program</label><select id="program" required><option value="">Select program</option><option>BS Information Technology</option><option>BS Computer Science</option><option>BS Information System</option></select></div>
               <div class="form-group"><label for="gender">Gender</label><select id="gender"><option>Male</option><option>Female</option></select></div>
               <div class="form-group"><label for="graduation">Graduation Year</label><select id="graduation" required><option value="2024">2024</option><option value="2025">2025</option></select></div>
               <div class="form-group"><label for="email">Email</label><input id="email" type="email" required></div>
@@ -168,8 +168,8 @@
       <section id="search" class="page">
         <h1>Search Alumni</h1>
         <div class="table-box">
-          <input class="search" id="searchInput" placeholder="Search by name, course, year, or email">
-          <table><thead><tr><th>Name</th><th>Course</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="searchTable"></tbody></table>
+          <input class="search" id="searchInput" placeholder="Search by name, program, year, or email">
+          <table><thead><tr><th>Name</th><th>Program</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="searchTable"></tbody></table>
         </div>
       </section>
 
@@ -405,7 +405,7 @@
 
     $('alumniForm').onsubmit = e => {
       e.preventDefault();
-      alumni.push({ name:$('firstName').value.trim() + ' ' + $('lastName').value.trim(), course:$('course').value, gender:$('gender').value, year:Number($('graduation').value), email:$('email').value.trim() });
+      alumni.push({ name:$('firstName').value.trim() + ' ' + $('lastName').value.trim(), course:$('program').value, gender:$('gender').value, year:Number($('graduation').value), email:$('email').value.trim() });
       save(); e.target.reset(); $('graduation').value = '2024'; render(); renderDashboard(); renderReports(); page('alumni');
     };
     $('saveSettings').onclick = () => { document.title = $('systemName').value.trim() || document.title; alert('Settings saved.'); };
