@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Graduates by Year | Alumni Records</title>
+  <style>
+    :root { --blue:#0b5ed7; --navy:#082f6b; --bg:#f4f6f9; --muted:#6b7280; --line:#dfe7f3; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:#1f2937; font:15px Arial,sans-serif; }
+    header { padding:24px; background:linear-gradient(135deg,var(--blue),var(--navy)); color:#fff; }
+    header h1 { margin:0 0 8px; }
+    header p { margin:0; opacity:.9; }
+    main { max-width:1100px; margin:0 auto; padding:24px; }
+    .summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:24px; }
+    .card, .year-group { background:#fff; border-radius:14px; padding:20px; box-shadow:0 2px 8px #082f6b12; }
+    .card h2, .year-group h2 { margin:0 0 8px; color:var(--navy); }
+    .count { font-size:2rem; font-weight:bold; color:var(--blue); }
+    .year-group { margin-bottom:20px; }
+    .year-group h2 { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); padding-bottom:12px; }
+    .badge { font-size:.8rem; background:#e8f0ff; color:var(--blue); padding:6px 10px; border-radius:999px; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { text-align:left; padding:11px 8px; border-bottom:1px solid var(--line); }
+    th { color:var(--muted); font-size:.85rem; }
+    .empty { color:var(--muted); padding:8px 0; }
+    a { color:#fff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Graduates Categorized by Year</h1>
+    <p><a href="index.html">Back to Alumni Records</a></p>
+  </header>
+  <main>
+    <div class="summary" id="summary"></div>
+    <div id="categories"></div>
+  </main>
+  <script>
+    const fallback = [
+      ['Alyssa Mae Dela Cruz','BS Computer Science',2024],['Mark Joseph Santos','BS Computer Science',2025],['Christian James Rivera','BS Computer Science',2024],['Sophia Anne Bautista','BS Computer Science',2025],['Daniel Paulo Cruz','BS Computer Science',2024],['Bianca Claire Mendoza','BS Computer Science',2025],['Nathaniel Reyes','BS Computer Science',2024],['Camille Joy Villanueva','BS Computer Science',2025],['Jayson Lee Ramos','BS Computer Science',2024],['Grace Anne Lim','BS Computer Science',2025],
+      ['Elijah James Garcia','BS Information Technology',2024],['Mia Grace Torres','BS Information Technology',2025],['Jericho David Aquino','BS Information Technology',2024],['Patricia Rose Santos','BS Information Technology',2025],['Adrian Paul Umali','BS Information Technology',2024],['Karen Jane Lopez','BS Information Technology',2025],['Marcus Daniel Ferrer','BS Information Technology',2024],['Celine Marie Abad','BS Information Technology',2025],['Rafael M. Gonzales','BS Information Technology',2024],['Angela Mae Dizon','BS Information Technology',2025],
+      ['Kyle Ian Cervantes','BS Information System',2024],['Andrea Nicole Salazar','BS Information System',2025],['Vincent Carl De Leon','BS Information System',2024],['Rosemarie Anne Panganiban','BS Information System',2025],['Kenneth James Tan','BS Information System',2024],['Janice Mae Francisco','BS Information System',2025],['Joshua Daniel Yu','BS Information System',2024],['Rhea Patricia Reyes','BS Information System',2025],['Marco Luigi Ramos','BS Information System',2024],['Danielle Claire Matias','BS Information System',2025]
+    ].map(([name,course,year]) => ({name,course,year}));
+
+    function loadAlumni() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('alumniRecords'));
+        return Array.isArray(saved) && saved.length ? saved : fallback;
+      } catch (error) { return fallback; }
+    }
+    function render() {
+      const alumni = loadAlumni();
+      const years = [...new Set(alumni.map(a => Number(a.year)).filter(Number.isFinite))].sort((a,b) => a-b);
+      const summary = document.getElementById('summary');
+      summary.innerHTML = `<div class="card"><h2>Total Graduates</h2><div class="count">${alumni.length}</div></div>` +
+        years.map(year => `<div class="card"><h2>${year}</h2><div class="count">${alumni.filter(a => Number(a.year) === year).length}</div><div>graduates</div></div>`).join('');
+      const categories = document.getElementById('categories');
+      categories.innerHTML = years.map(year => {
+        const records = alumni.filter(a => Number(a.year) === year).sort((a,b) => a.name.localeCompare(b.name));
+        return `<section class="year-group"><h2>Graduates of ${year}<span class="badge">${records.length} ${records.length === 1 ? 'graduate' : 'graduates'}</span></h2><table><thead><tr><th>Name</th><th>Course</th></tr></thead><tbody>${records.map(a => `<tr><td>${escapeHtml(a.name)}</td><td>${escapeHtml(a.course)}</td></tr>`).join('')}</tbody></table></section>`;
+      }).join('') || '<p class="empty">No graduate records found.</p>';
+    }
+    function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
+    render();
+  </script>
+</body>
+</html>
