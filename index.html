@@ -188,399 +188,182 @@ const starter = [
 {name:'Rosemarie Anne Panganiban',course:'BS Information System',gender:'Female',year:2025,email:'rosemarie.panganiban@example.com'},
 {name:'Kenneth James Tan',course:'BS Information System',gender:'Male',year:2024,email:'kenneth.tan@example.com'},
 {name:'Janice Mae Francisco',course:'BS Information System',gender:'Female',year:2025,email:'janice.francisco@example.com'},
-{name:'Joshua Daniel2 228 L250 228 L238 228 L190 200 L230 188 L250 194 Z"/>
-            <polygon points="250,155 300,238 250,270 200,238" fill="#d9c9a7"/>
-            <path d="M150 220 L250 205 L350 220 L330 268 L250 300 L170 268 Z" fill="#ccb88d"/>
-            <path d="M250 135 L232 185 L250 200 L268 185 Z" fill="#2d4a66"/>
-            <rect x="246" y="170" width="8" height="80" fill="#2d4a66"/>
-            <path d="M250 250 L235 240 L228 220 L250 228 L272 220 L265 240 Z" fill="#2d4a66"/>
-          </g>
+{name:'Joshua Daniel Yu',course:'BS Information System',gender:'Male',year:2024,email:'joshua.yu@example.com'},
+{name:'Rhea Patricia Reyes',course:'BS Information System',gender:'Female',year:2025,email:'rhea.reyes@example.com'},
+{name:'Marco Luigi Ramos',course:'BS Information System',gender:'Male',year:2024,email:'marco.ramos@example.com'},
+{name:'Danielle Claire Matias',course:'BS Information System',gender:'Female',year:2025,email:'danielle.matias@example.com'}
+];
+const $=id=>document.getElementById(id);
+const courseOrder=['BS Computer Science','BS Information Technology','BS Information System'];
+const courseTableIds={'BS Computer Science':'csTable','BS Information Technology':'itTable','BS Information System':'isTable'};
+const defaultProfile={name:'Administrator',email:'admin@alumni.local',role:'System Administrator',phone:'',location:'',bio:'Manage your account information and keep your contact details up to date.'};
+const defaultUsers=[
+{username:'admin',password:'admin',name:'Administrator',email:'admin@alumni.local',role:'System Administrator',phone:'',location:'',bio:''},
+{username:'aeronn',password:'aeronn123',name:'Aeronn V Palma',email:'aeronn.palma@example.com',role:'Alumni Officer',phone:'',location:'',bio:''},
+{username:'lance',password:'lance123',name:'Lance Tormo',email:'lance.tormo@example.com',role:'Alumni Officer',phone:'',location:'',bio:''},
+{username:'angel',password:'angel123',name:'Angel Pagay',email:'angel.pagay@example.com',role:'Alumni Officer',phone:'',location:'',bio:''}
+];
+function readStorage(key,fallback){try{const value=JSON.parse(localStorage.getItem(key));return value===null?fallback:value;}catch(e){return fallback;}}
+let alumni=readStorage('alumniRecords',starter);
+let profile={...defaultProfile,...readStorage('adminProfile',{})};
+let systemUsers=readStorage('systemUsers',defaultUsers);
+let activityLogs=readStorage('activityLogs',[]);
+let activeUser=null;
 
-          <g fill="#e0d2ad" stroke="#e0d2ad" stroke-width="2">
-            <path d="M154 260 C175 220, 196 204, 210 206 C195 236, 177 256, 154 260 Z"/>
-            <path d="M346 260 C325 220, 304 204, 290 206 C305 236, 323 256, 346 260 Z"/>
-            <path d="M162 310 C182 280, 214 270, 228 280 C210 332, 196 350, 162 310 Z"/>
-            <path d="M338 310 C318 280, 286 270, 272 280 C290 332, 304 350, 338 310 Z"/>
-          </g>
-
-          <g fill="#f0e8d7">
-            <path d="M95 336 L117 291 L140 336 Z"/>
-            <path d="M405 336 L383 291 L360 336 Z"/>
-            <path d="M118 336 L154 311 L180 336 Z"/>
-            <path d="M382 336 L346 311 L320 336 Z"/>
-          </g>
-
-          <g fill="#f0e8d7">
-            <path d="M120 342 L90 390 L151 367 Z"/>
-            <path d="M380 342 L410 390 L349 367 Z"/>
-          </g>
-
-          <g fill="#f0e8d7">
-            <path d="M113 330 L88 352 L110 365 L138 353 Z"/>
-            <path d="M387 330 L412 352 L390 365 L362 353 Z"/>
-          </g>
-
-          <g fill="#f0e8d7">
-            <path d="M92 354 L69 393 L121 376 Z"/>
-            <path d="M408 354 L431 393 L379 376 Z"/>
-          </g>
-
-          <g fill="#f0e8d7">
-            <path d="M150 347 L135 378 L168 360 Z"/>
-            <path d="M350 347 L365 378 L332 360 Z"/>
-          </g>
-
-          <g fill="#f0e8d7">
-            <g transform="translate(80 310)">
-              <path d="M0,-22 L6,-7 L21,-7 L9,1 L14,16 L0,7 L-14,16 L-9,1 L-21,-7 L-6,-7 Z"/>
-            </g>
-            <g transform="translate(420 310)">
-              <path d="M0,-22 L6,-7 L21,-7 L9,1 L14,16 L0,7 L-14,16 L-9,1 L-21,-7 L-6,-7 Z"/>
-            </g>
-          </g>
-
-          <text x="250" y="413" text-anchor="middle" font-size="32" font-family="Georgia, serif" fill="#f0e8d7" font-weight="700">DATA BASE ALUMNI</text>
-          <text x="250" y="450" text-anchor="middle" font-size="30" font-family="Georgia, serif" fill="#f0e8d7" font-weight="700">MANAGEMENT</text>
-          <text x="250" y="487" text-anchor="middle" font-size="33" font-family="Georgia, serif" fill="#f0e8d7" font-weight="700">SYSTEM</text>
-        </svg>
-      </div>
-      <div class="logo">
-        <h1>Implementation Of A Web Based Alumni Database Management System</h1>
-        <p>Management System</p>
-      </div>
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input id="username" required maxlength="25">
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input id="password" type="password" required maxlength="25">
-        </div>
-        <p id="loginAlert" class="login-alert" role="alert" aria-live="polite">Incorrect password. Please try again.</p>
-        <button class="primary-btn" type="submit">Login</button><br>
-        <a href="#" class="forgot-link" id="forgotPassword">Forgot password</a>
-      </form>
-      <p id="resetMessage" class="reset-message">Password reset instructions were sent to admin@alumni.local.</p>
-    </div>
-  </div>
-
-  <div id="system">
-    <aside class="sidebar">
-      <div class="brand">
-        <h2>Implementation Of A Web Based Alumni Database Management System</h2>
-        <p>Management System</p>
-      </div>
-      <nav>
-        <ul class="menu">
-          <li><button data-page="dashboard" class="active">Dashboard</button></li>
-          <li><button data-page="alumni">Alumni Records</button></li>
-          <li><button data-page="addAlumni">Add Alumni</button></li>
-          <li><button data-page="search">Search Alumni</button></li>
-          <li><button data-page="reports">Reports</button></li>
-          <li><button data-page="users">User Management</button></li>
-          <li><button data-page="settings">Settings</button></li>
-          <li><button id="logoutBtn" class="secondary-btn">Logout</button></li>
-        </ul>
-      </nav>
-    </aside>
-
-    <main class="content">
-      <header class="topbar">
-        <strong>Implementation Of A Web Based Alumni Database Management System</strong>
-        <span>Welcome, <b id="currentUser">Administrator</b></span>
-      </header>
-
-      <section id="dashboard" class="page active">
-        <h1>Implementation Of A Web Based Alumni Database Management System</h1>
-        <p>Overview of the Alumni Records Management System</p>
-        <div class="cards">
-          <div class="card"><h3>Total Alumni</h3><div class="value" id="totalAlumni">0</div></div>
-          <div class="card"><h3>Male</h3><div class="value" id="maleCount">0</div></div>
-          <div class="card"><h3>Female</h3><div class="value" id="femaleCount">0</div></div>
-          <div class="card"><h3>System Users</h3><div class="value" id="totalUsers">1</div></div>
-        </div>
-      </section>
-
-      <section id="alumni" class="page">
-        <h1>Alumni Records</h1>
-        <div class="table-box">
-          <div class="table-header"><h2>BS Computer Science</h2></div>
-          <table><thead><tr><th>Name</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="csTable"></tbody></table>
-        </div>
-        <div class="table-box">
-          <div class="table-header"><h2>BS Information Technology</h2></div>
-          <table><thead><tr><th>Name</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="itTable"></tbody></table>
-        </div>
-        <div class="table-box">
-          <div class="table-header"><h2>BS Information System</h2></div>
-          <table><thead><tr><th>Name</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="isTable"></tbody></table>
-        </div>
-      </section>
-
-      <section id="addAlumni" class="page">
-        <h1>Add Alumni</h1>
-        <div class="form-box">
-          <form id="alumniForm">
-            <div class="form-grid">
-              <div class="form-group"><label for="firstName">First Name</label><input id="firstName" required></div>
-              <div class="form-group"><label for="lastName">Last Name</label><input id="lastName" required></div>
-              <div class="form-group"><label for="program">Program</label><select id="program" required><option value="">Select program</option><option>BS Information Technology</option><option>BS Computer Science</option><option>BS Information System</option></select></div>
-              <div class="form-group"><label for="gender">Gender</label><select id="gender"><option>Male</option><option>Female</option></select></div>
-              <div class="form-group"><label for="graduation">Graduation Year</label><select id="graduation" required><option value="2024">2024</option><option value="2025">2025</option></select></div>
-              <div class="form-group"><label for="email">Email</label><input id="email" type="email" required></div>
-            </div>
-            <button class="primary-btn" type="submit">Add Alumni</button>
-          </form>
-        </div>
-      </section>
-
-      <section id="search" class="page">
-        <h1>Search Alumni</h1>
-        <div class="table-box">
-          <input class="search" id="searchInput" placeholder="Search by name, program, year, or email">
-          <table><thead><tr><th>Name</th><th>Program</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="searchTable"></tbody></table>
-        </div>
-      </section>
-
-      <section id="reports" class="page"><h1>Reports</h1><div class="report-grid" id="reportGrid"></div></section>
-
-      <section id="users" class="page">
-        <h1>User Management</h1>
-        <div class="table-box"><table><thead><tr><th>Username</th><th>Role</th><th>Status</th></tr></thead><tbody id="usersTable"></tbody></table></div>
-      </section>
-
-      <section id="settings" class="page">
-        <h1>Settings</h1>
-        <div class="settings-tabs">
-          <button class="settings-tab-btn active" data-tab="system">System Settings</button>
-          <button class="settings-tab-btn" data-tab="profile">Edit Profile</button>
-        </div>
-
-        <div id="system-settings" class="settings-content active">
-          <div class="settings-box">
-            <div class="settings">
-              <label for="systemName">System Name</label>
-              <input id="systemName" value="Implementation Of A Web Based Alumni Database Management System">
-              <button id="saveSettings" class="primary-btn">Save Settings</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="profile-settings" class="settings-content">
-          <div class="profile-card">
-            <div class="profile-header">
-              <div class="profile-avatar" id="profileAvatar">AD</div>
-              <div><h2 id="profileHeading">Administrator</h2><p id="profileRole">System Administrator</p></div>
-            </div>
-            <div class="profile-details">
-              <div class="profile-detail"><strong>Email</strong><span id="profileEmailDisplay">admin@alumni.local</span></div>
-              <div class="profile-detail"><strong>Phone</strong><span id="profilePhoneDisplay">Not provided</span></div>
-              <div class="profile-detail"><strong>Location</strong><span id="profileLocationDisplay">Not provided</span></div>
-            </div>
-            <p class="profile-bio" id="profileBioDisplay">Manage your account information and keep your contact details up to date.</p>
-          </div>
-          <div class="form-box">
-            <h2>Edit Profile Information</h2>
-            <form id="profileForm">
-              <div class="form-grid">
-                <div class="form-group"><label for="profileName">Full Name</label><input id="profileName" required></div>
-                <div class="form-group"><label for="profileEmail">Email</label><input id="profileEmail" type="email" required></div>
-                <div class="form-group"><label for="profileRoleInput">Role</label><input id="profileRoleInput" required></div>
-                <div class="form-group"><label for="profilePhone">Phone</label><input id="profilePhone" type="tel" placeholder="e.g. +63 912 345 6789"></div>
-                <div class="form-group"><label for="profileLocation">Location</label><input id="profileLocation" placeholder="e.g. Manila, Philippines"></div>
-                <div class="form-group" style="grid-column:1/-1"><label for="profileBio">Bio</label><textarea id="profileBio" placeholder="Tell us a little about yourself"></textarea></div>
-              </div>
-              <button class="primary-btn" type="submit">Save Profile</button>
-              <p id="profileMessage" class="profile-message" role="status">Profile updated successfully.</p>
-            </form>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <script>
-    const starter = [
-      { name:'Alyssa Mae Dela Cruz', course:'BS Computer Science', gender:'Female', year:2024, email:'alyssa.dela.cruz@example.com' },
-      { name:'Mark Joseph Santos', course:'BS Computer Science', gender:'Male', year:2025, email:'mark.santos@example.com' },
-      { name:'Christian James Rivera', course:'BS Computer Science', gender:'Male', year:2024, email:'christian.rivera@example.com' },
-      { name:'Sophia Anne Bautista', course:'BS Computer Science', gender:'Female', year:2025, email:'sophia.bautista@example.com' },
-      { name:'Daniel Paulo Cruz', course:'BS Computer Science', gender:'Male', year:2024, email:'daniel.cruz@example.com' },
-      { name:'Bianca Claire Mendoza', course:'BS Computer Science', gender:'Female', year:2025, email:'bianca.mendoza@example.com' },
-      { name:'Nathaniel Reyes', course:'BS Computer Science', gender:'Male', year:2024, email:'nathaniel.reyes@example.com' },
-      { name:'Camille Joy Villanueva', course:'BS Computer Science', gender:'Female', year:2025, email:'camille.villanueva@example.com' },
-      { name:'Jayson Lee Ramos', course:'BS Computer Science', gender:'Male', year:2024, email:'jayson.ramos@example.com' },
-      { name:'Grace Anne Lim', course:'BS Computer Science', gender:'Female', year:2025, email:'grace.lim@example.com' },
-      { name:'Elijah James Garcia', course:'BS Information Technology', gender:'Male', year:2024, email:'elijah.garcia@example.com' },
-      { name:'Mia Grace Torres', course:'BS Information Technology', gender:'Female', year:2025, email:'mia.torres@example.com' },
-      { name:'Jericho David Aquino', course:'BS Information Technology', gender:'Male', year:2024, email:'jericho.aquino@example.com' },
-      { name:'Patricia Rose Santos', course:'BS Information Technology', gender:'Female', year:2025, email:'patricia.santos@example.com' },
-      { name:'Adrian Paul Umali', course:'BS Information Technology', gender:'Male', year:2024, email:'adrian.umali@example.com' },
-      { name:'Karen Jane Lopez', course:'BS Information Technology', gender:'Female', year:2025, email:'karen.lopez@example.com' },
-      { name:'Marcus Daniel Ferrer', course:'BS Information Technology', gender:'Male', year:2024, email:'marcus.ferrer@example.com' },
-      { name:'Celine Marie Abad', course:'BS Information Technology', gender:'Female', year:2025, email:'celine.abad@example.com' },
-      { name:'Rafael M. Gonzales', course:'BS Information Technology', gender:'Male', year:2024, email:'rafael.gonzales@example.com' },
-      { name:'Angela Mae Dizon', course:'BS Information Technology', gender:'Female', year:2025, email:'angela.dizon@example.com' },
-      { name:'Kyle Ian Cervantes', course:'BS Information System', gender:'Male', year:2024, email:'kyle.cervantes@example.com' },
-      { name:'Andrea Nicole Salazar', course:'BS Information System', gender:'Female', year:2025, email:'andrea.salazar@example.com' },
-      { name:'Vincent Carl De Leon', course:'BS Information System', gender:'Male', year:2024, email:'vincent.deleon@example.com' },
-      { name:'Rosemarie Anne Panganiban', course:'BS Information System', gender:'Female', year:2025, email:'rosemarie.panganiban@example.com' },
-      { name:'Kenneth James Tan', course:'BS Information System', gender:'Male', year:2024, email:'kenneth.tan@example.com' },
-      { name:'Janice Mae Francisco', course:'BS Information System', gender:'Female', year:2025, email:'janice.francisco@example.com' },
-      { name:'Joshua Daniel Yu', course:'BS Information System', gender:'Male', year:2024, email:'joshua.yu@example.com' },
-      { name:'Rhea Patricia Reyes', course:'BS Information System', gender:'Female', year:2025, email:'rhea.reyes@example.com' },
-      { name:'Marco Luigi Ramos', course:'BS Information System', gender:'Male', year:2024, email:'marco.ramos@example.com' },
-      { name:'Danielle Claire Matias', course:'BS Information System', gender:'Female', year:2025, email:'danielle.matias@example.com' }
-    ];
-
-    const $ = id => document.getElementById(id);
-    const courseOrder = ['BS Computer Science', 'BS Information Technology', 'BS Information System'];
-    const courseTableIds = { 'BS Computer Science':'csTable', 'BS Information Technology':'itTable', 'BS Information System':'isTable' };
-    const defaultProfile = { name:'Administrator', email:'admin@alumni.local', role:'System Administrator', phone:'', location:'', bio:'Manage your account information and keep your contact details up to date.' };
-
-    const users = [
-      { username:'admin', password:'admin', name:'Administrator', email:'admin@alumni.local', role:'System Administrator', phone:'', location:'', bio:'' },
-      { username:'aeronn', password:'aeronn123', name:'Aeronn V Palma', email:'aeronn.palma@example.com', role:'Alumni Officer', phone:'', location:'', bio:'' },
-      { username:'lance', password:'lance123', name:'Lance Tormo', email:'lance.tormo@example.com', role:'Alumni Officer', phone:'', location:'', bio:'' },
-      { username:'angel', password:'angel123', name:'Angel Pagay', email:'angel.pagay@example.com', role:'Alumni Officer', phone:'', location:'', bio:'' }
-    ];
-
-    function load() {
-      try { return JSON.parse(localStorage.getItem('alumniRecords')) || starter; } catch (e) { return starter; }
-    }
-    function loadProfile() {
-      try { return { ...defaultProfile, ...(JSON.parse(localStorage.getItem('adminProfile')) || {}) }; } catch (e) { return { ...defaultProfile }; }
-    }
-    function loadUsers() {
-      try { return JSON.parse(localStorage.getItem('systemUsers')) || users; } catch (e) { return users; }
-    }
-    let alumni = load();
-    let profile = loadProfile();
-    let systemUsers = loadUsers();
-
-    function save() { try { localStorage.setItem('alumniRecords', JSON.stringify(alumni)); } catch (e) {} }
-    function saveProfile() { try { localStorage.setItem('adminProfile', JSON.stringify(profile)); } catch (e) {} }
-    function saveUsers() { try { localStorage.setItem('systemUsers', JSON.stringify(systemUsers)); } catch (e) {} }
-    function cell(value) { const td = document.createElement('td'); td.textContent = value; return td; }
-
-    function render(filter = '') {
-      const q = filter.toLowerCase();
-      const list = alumni.filter(a => Object.values(a).some(v => String(v).toLowerCase().includes(q)));
-      $('searchTable').replaceChildren();
-      courseOrder.forEach(course => {
-        const tbody = $(courseTableIds[course]);
-        if (!tbody) return;
-        tbody.replaceChildren();
-        alumni.filter(a => a.course === course).filter(a => Object.values(a).some(v => String(v).toLowerCase().includes(q))).forEach(a => {
-          const tr = document.createElement('tr');
-          [a.name, a.gender, a.year, a.email].forEach(v => tr.appendChild(cell(v)));
-          tbody.appendChild(tr);
-        });
-      });
-      list.forEach(a => {
-        const tr = document.createElement('tr');
-        [a.name, a.course, a.gender, a.year, a.email].forEach(v => tr.appendChild(cell(v)));
-        $('searchTable').appendChild(tr);
-      });
-    }
-
-    function renderDashboard() {
-      $('totalAlumni').textContent = alumni.length;
-      $('maleCount').textContent = alumni.filter(a => a.gender === 'Male').length;
-      $('femaleCount').textContent = alumni.filter(a => a.gender === 'Female').length;
-    }
-    function renderReports() {
-      const cats = ['BS Information Technology', 'BS Computer Science', 'BS Information System'];
-      $('reportGrid').replaceChildren();
-      [['Total Alumni', alumni.length], ...cats.map(c => [c, alumni.filter(a => a.course === c).length])].forEach(([t, v]) => {
-        const card = document.createElement('div'); card.className = 'report-card'; card.innerHTML = '<h3>' + t + '</h3><p>' + v + '</p>'; $('reportGrid').appendChild(card);
-      });
-    }
-    function renderProfile() {
-      const name = profile.name.trim() || defaultProfile.name;
-      $('profileHeading').textContent = name;
-      $('currentUser').textContent = name;
-      $('profileRole').textContent = profile.role || defaultProfile.role;
-      $('profileEmailDisplay').textContent = profile.email || 'Not provided';
-      $('profilePhoneDisplay').textContent = profile.phone || 'Not provided';
-      $('profileLocationDisplay').textContent = profile.location || 'Not provided';
-      $('profileBioDisplay').textContent = profile.bio || 'No bio added yet.';
-      $('profileAvatar').textContent = name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase() || 'AD';
-      $('profileName').value = profile.name;
-      $('profileEmail').value = profile.email;
-      $('profileRoleInput').value = profile.role;
-      $('profilePhone').value = profile.phone;
-      $('profileLocation').value = profile.location;
-      $('profileBio').value = profile.bio;
-    }
-    function renderUsers() {
-      const tbody = $('usersTable');
-      tbody.replaceChildren();
-      systemUsers.forEach(u => {
-        const tr = document.createElement('tr');
-        [u.username, u.role || 'Alumni Officer', 'Active'].forEach(v => tr.appendChild(cell(v)));
-        tbody.appendChild(tr);
-      });
-      $('totalUsers').textContent = systemUsers.length;
-    }
-    function page(id) {
-      document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id));
-      document.querySelectorAll('[data-page]').forEach(b => b.classList.toggle('active', b.dataset.page === id));
-      if (id === 'settings') resetSettingsTabs();
-    }
-
-    function resetSettingsTabs() {
-      document.querySelectorAll('.settings-tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.settings-content').forEach(c => c.classList.remove('active'));
-      document.querySelector('[data-tab="system"]').classList.add('active');
-      $('system-settings').classList.add('active');
-    }
-
-    document.querySelectorAll('[data-page]').forEach(b => b.onclick = () => page(b.dataset.page));
-    document.querySelectorAll('[data-tab]').forEach(btn => {
-      btn.onclick = () => {
-        document.querySelectorAll('.settings-tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.settings-content').forEach(c => c.classList.remove('active'));
-        btn.classList.add('active');
-        $(btn.dataset.tab + '-settings').classList.add('active');
-      };
+function save(){try{localStorage.setItem('alumniRecords',JSON.stringify(alumni));}catch(e){alert('Unable to save. Browser storage may be full or disabled.');}}
+function saveProfile(){try{localStorage.setItem('adminProfile',JSON.stringify(profile));}catch(e){}}
+function saveUsers(){try{localStorage.setItem('systemUsers',JSON.stringify(systemUsers));}catch(e){}}
+function saveLogs(){try{localStorage.setItem('activityLogs',JSON.stringify(activityLogs.slice(0,1000)));}catch(e){}}
+function cell(value){const td=document.createElement('td');td.textContent=value??'';return td;}
+function logActivity(action,details='',status='Success',username=null){
+  const entry={id:Date.now()+'-'+Math.random().toString(36).slice(2,8),timestamp:new Date().toISOString(),username:username||(activeUser?.username||'Guest'),action,details,status};
+  activityLogs.unshift(entry);activityLogs=activityLogs.slice(0,1000);saveLogs();renderLogSummary();
+  if($('activityLogs')?.classList.contains('active'))renderActivityLogs();
+}
+function formatDate(value){const d=new Date(value);return Number.isNaN(d.getTime())?value:d.toLocaleString();}
+function render(filter=''){
+  const q=filter.toLowerCase();
+  const list=alumni.filter(a=>Object.values(a).some(v=>String(v).toLowerCase().includes(q)));
+  $('searchTable').replaceChildren();
+  courseOrder.forEach(course=>{
+    const tbody=$(courseTableIds[course]);tbody.replaceChildren();
+    alumni.filter(a=>a.course===course&&Object.values(a).some(v=>String(v).toLowerCase().includes(q))).forEach(a=>{
+      const tr=document.createElement('tr');[a.name,a.gender,a.year,a.email].forEach(v=>tr.appendChild(cell(v)));tbody.appendChild(tr);
     });
-    
-    $('searchInput').oninput = e => render(e.target.value);
-    $('username').oninput = $('password').oninput = () => $('loginAlert').classList.remove('visible');
-
-    $('loginForm').onsubmit = e => {
-      e.preventDefault();
-      const user = systemUsers.find(u => u.username === $('username').value.trim() && u.password === $('password').value);
-      if (user) {
-        $('loginAlert').classList.remove('visible');
-        $('loginPage').style.display = 'none';
-        $('system').style.display = 'block';
-        profile = { name: user.name, email: user.email, role: user.role, phone: user.phone || '', location: user.location || '', bio: user.bio || '' };
-        renderProfile();
-      } else {
-        $('loginAlert').classList.add('visible');
-      }
-    };
-    $('logoutBtn').onclick = () => { $('system').style.display = 'none'; $('loginPage').style.display = 'grid'; $('loginForm').reset(); $('loginAlert').classList.remove('visible'); };
-    $('forgotPassword').onclick = e => { e.preventDefault(); $('resetMessage').textContent = 'Password reset instructions were sent to ' + ($('username').value.trim() || 'your email') + '.'; $('resetMessage').classList.add('visible'); };
-
-    $('profileForm').onsubmit = e => {
-      e.preventDefault();
-      profile = { name:$('profileName').value.trim(), email:$('profileEmail').value.trim(), role:$('profileRoleInput').value.trim(), phone:$('profilePhone').value.trim(), location:$('profileLocation').value.trim(), bio:$('profileBio').value.trim() };
-      saveProfile(); renderProfile(); $('profileMessage').classList.add('visible');
-      setTimeout(() => $('profileMessage').classList.remove('visible'), 3000);
-    };
-
-    $('alumniForm').onsubmit = e => {
-      e.preventDefault();
-      alumni.push({ name:$('firstName').value.trim() + ' ' + $('lastName').value.trim(), course:$('program').value, gender:$('gender').value, year:Number($('graduation').value), email:$('email').value.trim() });
-      save(); e.target.reset(); $('graduation').value = '2024'; render(); renderDashboard(); renderReports(); page('alumni');
-    };
-    $('saveSettings').onclick = () => { document.title = $('systemName').value.trim() || document.title; alert('Settings saved.'); };
-
-    render(); renderDashboard(); renderReports(); renderProfile(); renderUsers();
-  </script>
+  });
+  list.forEach(a=>{const tr=document.createElement('tr');[a.name,a.course,a.gender,a.year,a.email].forEach(v=>tr.appendChild(cell(v)));$('searchTable').appendChild(tr);});
+}
+function renderDashboard(){
+  $('totalAlumni').textContent=alumni.length;
+  $('maleCount').textContent=alumni.filter(a=>a.gender==='Male').length;
+  $('femaleCount').textContent=alumni.filter(a=>a.gender==='Female').length;
+  $('totalUsers').textContent=systemUsers.length;$('dashboardLogCount').textContent=activityLogs.length;
+}
+function renderReports(){
+  const cats=['BS Information Technology','BS Computer Science','BS Information System'];$('reportGrid').replaceChildren();
+  [['Total Alumni',alumni.length],...cats.map(c=>[c,alumni.filter(a=>a.course===c).length])].forEach(([t,v])=>{
+    const card=document.createElement('div');card.className='report-card';const h=document.createElement('h3');h.textContent=t;const p=document.createElement('p');p.textContent=v;card.append(h,p);$('reportGrid').appendChild(card);
+  });
+}
+function renderProfile(){
+  const name=profile.name.trim()||defaultProfile.name;
+  $('profileHeading').textContent=name;$('currentUser').textContent=activeUser?.name||name;
+  $('profileRole').textContent=activeUser?.role||profile.role||defaultProfile.role;
+  $('profileEmailDisplay').textContent=profile.email||'Not provided';$('profilePhoneDisplay').textContent=profile.phone||'Not provided';
+  $('profileLocationDisplay').textContent=profile.location||'Not provided';$('profileBioDisplay').textContent=profile.bio||'No bio added yet.';
+  $('profileAvatar').textContent=name.split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0]).join('').toUpperCase()||'AD';
+  $('profileName').value=profile.name;$('profileEmail').value=profile.email;$('profileRoleInput').value=profile.role;
+  $('profilePhone').value=profile.phone;$('profileLocation').value=profile.location;$('profileBio').value=profile.bio;
+}
+function renderUsers(){
+  const tbody=$('usersTable');tbody.replaceChildren();
+  systemUsers.forEach(u=>{const tr=document.createElement('tr');[u.username,u.role||'Alumni Officer','Active'].forEach(v=>tr.appendChild(cell(v)));tbody.appendChild(tr);});
+  $('totalUsers').textContent=systemUsers.length;
+}
+function renderLogSummary(){
+  $('logTotal').textContent=activityLogs.length;
+  $('logSuccess').textContent=activityLogs.filter(l=>l.action.toLowerCase().includes('login')&&l.status==='Success').length;
+  $('logFailed').textContent=activityLogs.filter(l=>l.action.toLowerCase().includes('login')&&l.status==='Failed').length;
+  $('logChanges').textContent=activityLogs.filter(l=>/added|updated|saved|changed|deleted/i.test(l.action)).length;
+  $('dashboardLogCount').textContent=activityLogs.length;
+}
+function renderActivityLogs(){
+  const q=($('logSearch').value||'').trim().toLowerCase();
+  const matches=activityLogs.filter(l=>[l.username,l.action,l.details,l.status,formatDate(l.timestamp)].some(v=>String(v||'').toLowerCase().includes(q)));
+  const tbody=$('logsTable');tbody.replaceChildren();
+  matches.forEach(l=>{
+    const tr=document.createElement('tr');
+    [formatDate(l.timestamp),l.username,l.action,l.details].forEach(v=>tr.appendChild(cell(v)));
+    const td=document.createElement('td');const badge=document.createElement('span');badge.className='status-pill'+(l.status==='Failed'?' failed':'');badge.textContent=l.status||'Success';td.appendChild(badge);tr.appendChild(td);tbody.appendChild(tr);
+  });
+  $('noLogsMessage').hidden=matches.length!==0;renderLogSummary();
+}
+function page(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
+  document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  if(id==='settings')resetSettingsTabs();if(id==='activityLogs')renderActivityLogs();
+  logActivity('Viewed page','Opened '+id+' page','Success');
+}
+function resetSettingsTabs(){
+  document.querySelectorAll('.settings-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.settings-content').forEach(c=>c.classList.remove('active'));
+  document.querySelector('[data-tab="system"]').classList.add('active');$('system-settings').classList.add('active');
+}
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>page(b.dataset.page));
+document.querySelectorAll('[data-tab]').forEach(btn=>btn.onclick=()=>{
+  document.querySelectorAll('.settings-tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.settings-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');$(btn.dataset.tab+'-settings').classList.add('active');
+  logActivity('Viewed settings tab','Opened '+btn.textContent);
+});
+$('searchInput').oninput=e=>render(e.target.value);
+$('logSearch').oninput=renderActivityLogs;
+$('refreshLogs').onclick=renderActivityLogs;
+$('username').oninput=$('password').oninput=()=>$('loginAlert').classList.remove('visible');
+$('loginForm').onsubmit=e=>{
+  e.preventDefault();const attempted=$('username').value.trim();
+  const user=systemUsers.find(u=>u.username===attempted&&u.password===$('password').value);
+  if(user){
+    activeUser=user;logActivity('Successful login','User logged in successfully','Success',user.username);
+    $('loginAlert').classList.remove('visible');$('loginPage').style.display='none';$('system').style.display='block';
+    profile={name:user.name||defaultProfile.name,email:user.email||defaultProfile.email,role:user.role||defaultProfile.role,phone:user.phone||'',location:user.location||'',bio:user.bio||''};
+    renderProfile();renderDashboard();page('dashboard');
+  }else{
+    logActivity('Failed login','Unsuccessful login attempt','Failed',attempted||'Unknown');
+    $('loginAlert').textContent='Incorrect username or password. Please try again.';$('loginAlert').classList.add('visible');
+  }
+};
+$('logoutBtn').onclick=()=>{
+  logActivity('Logout','User logged out successfully','Success');
+  activeUser=null;$('system').style.display='none';$('loginPage').style.display='grid';$('loginForm').reset();$('loginAlert').classList.remove('visible');
+};
+$('forgotPassword').onclick=e=>{
+  e.preventDefault();const target=$('username').value.trim()||'your email';
+  $('resetMessage').textContent='Password reset instructions were sent to '+target+'.';$('resetMessage').classList.add('visible');
+  logActivity('Password reset requested','Reset instructions displayed for '+target,'Success');
+};
+$('profileForm').onsubmit=e=>{
+  e.preventDefault();const before={...profile};
+  profile={name:$('profileName').value.trim(),email:$('profileEmail').value.trim(),role:$('profileRoleInput').value.trim(),phone:$('profilePhone').value.trim(),location:$('profileLocation').value.trim(),bio:$('profileBio').value.trim()};
+  saveProfile();
+  const userIndex=systemUsers.findIndex(u=>u.username===activeUser?.username);
+  if(userIndex>=0){systemUsers[userIndex]={...systemUsers[userIndex],name:profile.name,email:profile.email,role:profile.role,phone:profile.phone,location:profile.location,bio:profile.bio};activeUser=systemUsers[userIndex];saveUsers();renderUsers();}
+  renderProfile();$('profileMessage').classList.add('visible');setTimeout(()=>$('profileMessage').classList.remove('visible'),3000);
+  logActivity('Updated profile','Updated account profile information');
+};
+$('alumniForm').onsubmit=e=>{
+  e.preventDefault();const name=$('firstName').value.trim()+' '+$('lastName').value.trim();
+  const email=$('email').value.trim();
+  if(alumni.some(a=>a.email.toLowerCase()===email.toLowerCase())){alert('An alumni record with this email already exists.');logActivity('Add alumni failed','Duplicate email: '+email,'Failed');return;}
+  const record={name,course:$('program').value,gender:$('gender').value,year:Number($('graduation').value),email};
+  alumni.push(record);save();logActivity('Added alumni','Added '+name+' ('+record.course+')');
+  e.target.reset();$('graduation').value='2024';render();renderDashboard();renderReports();page('alumni');
+};
+$('saveSettings').onclick=()=>{
+  const oldTitle=document.title;const newTitle=$('systemName').value.trim()||oldTitle;document.title=newTitle;
+  ['loginSystemTitle','sideSystemTitle','topSystemTitle','dashboardTitle'].forEach(id=>$(id).textContent=newTitle);
+  try{localStorage.setItem('systemName',newTitle);}catch(e){}
+  alert('Settings saved.');logActivity('Changed system settings','System name set to: '+newTitle);
+};
+$('exportLogs').onclick=()=>{
+  const rows=[['Date and Time','Username','Action','Details','Status'],...activityLogs.map(l=>[formatDate(l.timestamp),l.username,l.action,l.details,l.status])];
+  downloadCSV(rows,'alumni-activity-logs.csv');logActivity('Exported activity logs','Exported activity log CSV');
+};
+$('exportAlumni').onclick=()=>{
+  const rows=[['Name','Program','Gender','Graduation Year','Email'],...alumni.map(a=>[a.name,a.course,a.gender,a.year,a.email])];
+  downloadCSV(rows,'alumni-records.csv');logActivity('Exported alumni records','Exported alumni records CSV');
+};
+function downloadCSV(rows,filename){
+  const csv=rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function applySystemName(){
+  const saved=localStorage.getItem('systemName');if(!saved)return;
+  document.title=saved;$('systemName').value=saved;
+  ['loginSystemTitle','sideSystemTitle','topSystemTitle','dashboardTitle'].forEach(id=>$(id).textContent=saved);
+}
+render();renderDashboard();renderReports();renderProfile();renderUsers();renderLogSummary();applySystemName();
+</script>
 </body>
 </html>
