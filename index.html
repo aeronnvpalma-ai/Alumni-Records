@@ -1,145 +1,194 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Implementation Of A Web Based Alumni Database Management System</title>
-  <style>
-    :root {
-      --blue:#0b5ed7; --navy:#082f6b; --bg:#f4f6f9; --muted:#6b7280; --line:#dfe7f3; --danger:#dc3545;
-    }
-    * { box-sizing: border-box; }
-    body { margin:0; background:var(--bg); color:#1f2937; font:15px Arial, sans-serif; }
-    button,input,select,textarea { font:inherit; }
-    .login-page { min-height:100vh; display:grid; place-items:center; padding:20px; background:linear-gradient(135deg, var(--blue), var(--navy)); }
-    .login-box { width:min(430px,100%); background:#fff; padding:40px; border-radius:18px; box-shadow:0 12px 30px rgba(0,0,0,.18); }
-    .logo-mark { width:min(340px,100%); margin:0 auto 18px; }
-    .logo-mark svg { display:block; width:100%; height:auto; }
-    .logo h1 { text-align:center; color:var(--navy); margin:0 0 10px; font-size:1.8rem; }
-    .logo p { text-align:center; color:var(--muted); margin:0 0 20px; }
-    .form-group { margin-bottom:18px; }
-    .form-group label { display:block; margin-bottom:8px; font-weight:bold; }
-    .form-group input, .form-group select, .form-group textarea { width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; }
-    .form-group textarea { min-height:120px; resize:vertical; }
-    .primary-btn, .secondary-btn, .action-btn { border:0; border-radius:10px; padding:11px 16px; font-weight:bold; cursor:pointer; }
-    .primary-btn { background:var(--blue); color:#fff; }
-    .primary-btn:hover { opacity:.95; }
-    .forgot-link { display:inline-block; margin-top:14px; color:var(--blue); }
-    .login-alert { display:none; margin:0 0 18px; padding:12px 14px; border:1px solid #f1aeb5; border-radius:10px; background:#f8d7da; color:#842029; text-align:center; font-weight:bold; }
-    .login-alert.visible { display:block; }
-    .reset-message { display:none; margin-top:15px; color:#198754; }
-    .reset-message.visible { display:block; }
-    #system { display:none; min-height:100vh; }
-    .sidebar { position:fixed; inset:0 auto 0 0; width:260px; padding:20px; background:var(--navy); color:#fff; }
-    .brand { text-align:center; }
-    .brand h2 { margin:0 0 8px; font-size:1.5rem; }
-    .brand p { margin:0 0 24px; color:#dfe7ff; }
-    .menu { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
-    .menu button { width:100%; padding:12px; text-align:left; color:#fff; background:transparent; border:0; border-radius:10px; font-weight:bold; }
-    .menu button.active, .menu button:hover { background:#ffffff1a; }
-    .content { margin-left:260px; padding:24px; }
-    .topbar { display:flex; justify-content:space-between; align-items:center; background:#fff; padding:20px; border-radius:14px; margin-bottom:20px; }
-    .page { display:none; }
-    .page.active { display:block; }
-    .cards, .report-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:18px; }
-    .card, .report-card, .table-box, .form-box, .settings-box, .profile-card { background:#fff; padding:20px; border-radius:14px; margin-bottom:20px; }
-    .card h3, .report-card h3 { margin:0; color:var(--muted); }
-    .value { font-size:2rem; font-weight:bold; color:var(--navy); margin-top:12px; }
-    .table-header { margin-bottom:15px; }
-    table { width:100%; border-collapse:collapse; }
-    th, td { padding:12px 10px; border-bottom:1px solid var(--line); text-align:left; }
-    .search { width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; margin-bottom:14px; }
-    .form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; }
-    .settings { display:grid; gap:8px; }
-    .settings input { padding:12px; border:1px solid var(--line); border-radius:10px; }
-    .settings-tabs { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:20px; }
-    .settings-tab-btn { padding:12px; border:2px solid var(--line); background:#fff; border-radius:10px; cursor:pointer; font-weight:bold; color:var(--navy); }
-    .settings-tab-btn.active { background:var(--blue); color:#fff; border-color:var(--blue); }
-    .settings-content { display:none; }
-    .settings-content.active { display:block; }
-    .profile-header { display:flex; align-items:center; gap:18px; padding-bottom:20px; margin-bottom:20px; border-bottom:1px solid var(--line); }
-    .profile-avatar { width:76px; height:76px; display:grid; place-items:center; flex:none; border-radius:50%; background:linear-gradient(135deg,var(--blue),var(--navy)); color:#fff; font-size:1.6rem; font-weight:bold; }
-    .profile-header h2 { margin:0 0 6px; color:var(--navy); }
-    .profile-header p { margin:0; color:var(--muted); }
-    .profile-details { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:20px; }
-    .profile-detail { padding:14px; border:1px solid var(--line); border-radius:10px; }
-    .profile-detail strong { display:block; margin-bottom:6px; color:var(--muted); font-size:.85rem; }
-    .profile-bio { color:var(--muted); line-height:1.5; }
-    .profile-message { display:none; margin:14px 0 0; color:#198754; font-weight:bold; }
-    .profile-message.visible { display:block; }
-    @media (max-width:840px) {
-      .sidebar { position:static; width:100%; }
-      .content { margin-left:0; padding:20px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Implementation Of A Web Based Alumni Database Management System</title>
+<style>
+:root{--blue:#0b5ed7;--navy:#082f6b;--bg:#f4f6f9;--muted:#6b7280;--line:#dfe7f3;--danger:#dc3545}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#1f2937;font:15px Arial,sans-serif}
+button,input,select,textarea{font:inherit}.login-page{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,var(--blue),var(--navy))}
+.login-box{width:min(430px,100%);background:#fff;padding:32px;border-radius:18px;box-shadow:0 12px 30px #0003}
+.logo-mark{width:min(210px,100%);margin:0 auto 14px}.logo-mark svg{display:block;width:100%;height:auto}
+.logo h1{text-align:center;color:var(--navy);margin:0 0 10px;font-size:1.35rem}.logo p{text-align:center;color:var(--muted);margin:0 0 20px}
+.form-group{margin-bottom:18px}.form-group label{display:block;margin-bottom:8px;font-weight:bold}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px}.form-group textarea{min-height:120px;resize:vertical}
+.primary-btn,.secondary-btn,.action-btn{border:0;border-radius:10px;padding:11px 16px;font-weight:bold;cursor:pointer}
+.primary-btn{background:var(--blue);color:#fff}.secondary-btn{background:#e9eef7;color:var(--navy)}.action-btn{background:#e8f0ff;color:var(--navy);padding:8px 10px}.danger-btn{background:#f8d7da;color:#842029}
+.forgot-link{display:inline-block;margin-top:14px;color:var(--blue)}.login-alert{display:none;margin:0 0 18px;padding:12px 14px;border:1px solid #f1aeb5;border-radius:10px;background:#f8d7da;color:#842029;text-align:center;font-weight:bold}.login-alert.visible{display:block}
+.reset-message{display:none;margin-top:15px;color:#198754}.reset-message.visible{display:block}
+#system{display:none;min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:260px;padding:20px;background:var(--navy);color:#fff;overflow-y:auto}
+.brand{text-align:center}.brand h2{margin:0 0 8px;font-size:1.3rem}.brand p{margin:0 0 24px;color:#dfe7ff}
+.menu{list-style:none;padding:0;margin:0;display:grid;gap:8px}.menu button{width:100%;padding:12px;text-align:left;color:#fff;background:transparent;border:0;border-radius:10px;font-weight:bold;cursor:pointer}.menu button.active,.menu button:hover{background:#ffffff1a}
+.content{margin-left:260px;padding:24px}.topbar{display:flex;gap:12px;justify-content:space-between;align-items:center;background:#fff;padding:20px;border-radius:14px;margin-bottom:20px}
+.page{display:none}.page.active{display:block}.cards,.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:18px}
+.card,.report-card,.table-box,.form-box,.settings-box,.profile-card{background:#fff;padding:20px;border-radius:14px;margin-bottom:20px;overflow-x:auto}
+.card h3,.report-card h3{margin:0;color:var(--muted)}.value{font-size:2rem;font-weight:bold;color:var(--navy);margin-top:12px}
+.table-header{margin-bottom:15px}table{width:100%;border-collapse:collapse}th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.search{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:14px}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.settings{display:grid;gap:8px}.settings input{padding:12px;border:1px solid var(--line);border-radius:10px}
+.settings-tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.settings-tab-btn{padding:12px;border:2px solid var(--line);background:#fff;border-radius:10px;cursor:pointer;font-weight:bold;color:var(--navy)}
+.settings-tab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}.settings-content{display:none}.settings-content.active{display:block}
+.profile-header{display:flex;align-items:center;gap:18px;padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+.profile-avatar{width:76px;height:76px;display:grid;place-items:center;flex:none;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--navy));color:#fff;font-size:1.6rem;font-weight:bold}
+.profile-header h2{margin:0 0 6px;color:var(--navy)}.profile-header p{margin:0;color:var(--muted)}
+.profile-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:20px}
+.profile-detail{padding:14px;border:1px solid var(--line);border-radius:10px}.profile-detail strong{display:block;margin-bottom:6px;color:var(--muted);font-size:.85rem}
+.profile-bio{color:var(--muted);line-height:1.5}.profile-message{display:none;margin:14px 0 0;color:#198754;font-weight:bold}.profile-message.visible{display:block}
+.log-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px}
+.log-stat{background:#f4f7fc;border:1px solid var(--line);border-radius:12px;padding:16px}.log-stat strong{display:block;color:var(--muted);font-size:.9rem}.log-stat span{display:block;font-size:1.6rem;font-weight:bold;color:var(--navy);margin-top:8px}
+.log-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.log-toolbar .search{flex:1;min-width:200px;margin:0}
+.status-pill{display:inline-block;padding:5px 9px;border-radius:999px;font-size:.8rem;font-weight:bold;background:#e8f5e9;color:#216e39}.status-pill.failed{background:#f8d7da;color:#842029}
+.small-note{color:var(--muted);font-size:.9rem;line-height:1.5}
+@media(max-width:840px){.sidebar{position:static;width:100%;}.content{margin-left:0;padding:20px}.topbar{align-items:flex-start;flex-direction:column}}
+</style>
 </head>
 <body>
-  <div class="login-page" id="loginPage">
-    <div class="login-box">
-      <div class="logo-mark" aria-label="Alumni Base logo">
-        <svg viewBox="0 0 500 500" role="img" aria-labelledby="title desc" xmlns="http://www.w3.org/2000/svg">
-          <title id="title">Alumni Base Data Base Alumni Management System</title>
-          <desc id="desc">Circular alumni logo with wreath and graduation cap</desc>
-          <circle cx="250" cy="250" r="212" fill="#0d3d6a"/>
-          <circle cx="250" cy="250" r="206" fill="none" stroke="#0e4070" stroke-width="8"/>
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <div class="logo-mark" aria-label="Alumni Base logo">
+      <svg viewBox="0 0 300 300" role="img" aria-label="Alumni Base logo" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="150" cy="150" r="140" fill="#0d3d6a" stroke="#e4d7b2" stroke-width="5"/>
+        <g fill="none" stroke="#e4d7b2" stroke-width="3" stroke-linecap="round">
+          <path d="M72 80 Q35 150 75 220 M228 80 Q265 150 225 220"/>
+          <path d="M80 95 l-20 -10 M70 120 l-23 -3 M65 148 l-22 5 M69 177 l-20 12 M81 202 l-16 18"/>
+          <path d="M220 95 l20 -10 M230 120 l23 -3 M235 148 l22 5 M231 177 l20 12 M219 202 l16 18"/>
+        </g>
+        <path d="M150 65 L82 108 L150 132 L218 108 Z" fill="#e4d7b2"/>
+        <path d="M105 120 L105 155 Q150 180 195 155 L195 120 L150 139 Z" fill="#d9c9a7"/>
+        <path d="M218 108 L218 145" stroke="#e4d7b2" stroke-width="5"/><circle cx="218" cy="151" r="6" fill="#e4d7b2"/>
+        <text x="150" y="225" text-anchor="middle" font-family="Georgia,serif" font-size="24" font-weight="bold" fill="#f0e8d7">ALUMNI BASE</text>
+        <text x="150" y="251" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="bold" fill="#f0e8d7">DATABASE MANAGEMENT</text>
+        <text x="150" y="270" text-anchor="middle" font-family="Georgia,serif" font-size="14" font-weight="bold" fill="#f0e8d7">SYSTEM</text>
+      </svg>
+    </div>
+    <div class="logo"><h1 id="loginSystemTitle">Implementation Of A Web Based Alumni Database Management System</h1><p>Management System</p></div>
+    <form id="loginForm">
+      <div class="form-group"><label for="username">Username</label><input id="username" required maxlength="25" autocomplete="username"></div>
+      <div class="form-group"><label for="password">Password</label><input id="password" type="password" required maxlength="25" autocomplete="current-password"></div>
+      <p id="loginAlert" class="login-alert" role="alert" aria-live="polite">Incorrect username or password. Please try again.</p>
+      <button class="primary-btn" type="submit">Login</button><br>
+      <a href="#" class="forgot-link" id="forgotPassword">Forgot password</a>
+    </form>
+    <p id="resetMessage" class="reset-message">Password reset instructions were sent to admin@alumni.local.</p>
+    <p class="small-note">Demo administrator account: <b>admin</b> / <b>admin</b></p>
+  </div>
+</div>
 
-          <g fill="#e4d7b2" stroke="#e4d7b2" stroke-width="2">
-            <path d="M82 180 L94 216 L117 219 L104 184 Z"/>
-            <path d="M368 180 L356 216 L333 219 L346 184 Z"/>
-            <path d="M117 224 L135 201 L121 250 L94 279 Z"/>
-            <path d="M333 224 L315 201 L329 250 L356 279 Z"/>
-            <path d="M111 246 L128 218 L138 260 L113 293 Z"/>
-            <path d="M339 246 L322 218 L312 260 L337 293 Z"/>
-            <path d="M122 153 L137 196 L107 193 Z"/>
-            <path d="M328 153 L313 196 L343 193 Z"/>
-          </g>
-
-          <g fill="none" stroke="#e4d7b2" stroke-width="3" stroke-linecap="round" opacity="0.9">
-            <line x1="250" y1="78" x2="250" y2="118"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(12 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(24 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(36 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(48 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(60 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(72 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(84 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(96 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(108 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(120 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(132 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(144 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(156 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(168 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(180 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(192 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(204 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(216 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(228 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(240 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(252 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(264 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(276 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(288 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(300 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(312 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(324 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(336 250 250)"/>
-            <line x1="250" y1="78" x2="272" y2="112" transform="rotate(348 250 250)"/>
-          </g>
-
-          <text x="250" y="92" text-anchor="middle" font-size="44" font-family="Georgia, serif" fill="#f0e8d7" font-weight="700" letter-spacing="3">ALUMNI BASE</text>
-
-          <g fill="#e4d7b2">
-            <path d="M250 148 L186 194 L224 196 L201 222 L250 206 L299 222 L276 196 L314 194 Z"/>
-            <path d="M200 197 L185 215 L210 232 L226 216 Z"/>
-            <path d="M300 197 L315 215 L290 232 L274 216 Z"/>
-            <path d="M164 260 L204 260 L180 308 L140 310 Z"/>
-            <path d="M336 260 L296 260 L320 308 L360 310 Z"/>
-          </g>
-
-          <g fill="#d9c9a7">
-            <path d="M250 128 L178 194 L212 194 L250 170 L288 194 L322 194 Z"/>
-            <path d="M270 188 L310 200 L262 228 L250 228 L238 228 L190 200 L230 188 L250 194 Z"/>
+<div id="system">
+  <aside class="sidebar">
+    <div class="brand"><h2 id="sideSystemTitle">Implementation Of A Web Based Alumni Database Management System</h2><p>Management System</p></div>
+    <nav><ul class="menu">
+      <li><button data-page="dashboard" class="active">Dashboard</button></li>
+      <li><button data-page="alumni">Alumni Records</button></li>
+      <li><button data-page="addAlumni">Add Alumni</button></li>
+      <li><button data-page="search">Search Alumni</button></li>
+      <li><button data-page="reports">Reports</button></li>
+      <li><button data-page="users">User Management</button></li>
+      <li><button data-page="activityLogs">Activity Logs</button></li>
+      <li><button data-page="settings">Settings</button></li>
+      <li><button id="logoutBtn" class="secondary-btn">Logout</button></li>
+    </ul></nav>
+  </aside>
+  <main class="content">
+    <header class="topbar"><strong id="topSystemTitle">Implementation Of A Web Based Alumni Database Management System</strong><span>Welcome, <b id="currentUser">Administrator</b></span></header>
+    <section id="dashboard" class="page active">
+      <h1 id="dashboardTitle">Implementation Of A Web Based Alumni Database Management System</h1><p>Overview of the Alumni Records Management System</p>
+      <div class="cards">
+        <div class="card"><h3>Total Alumni</h3><div class="value" id="totalAlumni">0</div></div>
+        <div class="card"><h3>Male</h3><div class="value" id="maleCount">0</div></div>
+        <div class="card"><h3>Female</h3><div class="value" id="femaleCount">0</div></div>
+        <div class="card"><h3>System Users</h3><div class="value" id="totalUsers">1</div></div>
+        <div class="card"><h3>Activity Log Entries</h3><div class="value" id="dashboardLogCount">0</div></div>
+      </div>
+    </section>
+    <section id="alumni" class="page">
+      <h1>Alumni Records</h1>
+      <div class="table-box"><div class="table-header"><h2>BS Computer Science</h2></div><table><thead><tr><th>Name</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="csTable"></tbody></table></div>
+      <div class="table-box"><div class="table-header"><h2>BS Information Technology</h2></div><table><thead><tr><th>Name</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="itTable"></tbody></table></div>
+      <div class="table-box"><div class="table-header"><h2>BS Information System</h2></div><table><thead><tr><th>Name</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="isTable"></tbody></table></div>
+    </section>
+    <section id="addAlumni" class="page">
+      <h1>Add Alumni</h1><div class="form-box"><form id="alumniForm"><div class="form-grid">
+        <div class="form-group"><label for="firstName">First Name</label><input id="firstName" required maxlength="80"></div>
+        <div class="form-group"><label for="lastName">Last Name</label><input id="lastName" required maxlength="80"></div>
+        <div class="form-group"><label for="program">Program</label><select id="program" required><option value="">Select program</option><option>BS Information Technology</option><option>BS Computer Science</option><option>BS Information System</option></select></div>
+        <div class="form-group"><label for="gender">Gender</label><select id="gender"><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div>
+        <div class="form-group"><label for="graduation">Graduation Year</label><select id="graduation" required><option value="2024">2024</option><option value="2025">2025</option></select></div>
+        <div class="form-group"><label for="email">Email</label><input id="email" type="email" required maxlength="120"></div>
+      </div><button class="primary-btn" type="submit">Add Alumni</button></form></div>
+    </section>
+    <section id="search" class="page">
+      <h1>Search Alumni</h1><div class="table-box"><input class="search" id="searchInput" placeholder="Search by name, program, year, or email"><table><thead><tr><th>Name</th><th>Program</th><th>Gender</th><th>Year</th><th>Email</th></tr></thead><tbody id="searchTable"></tbody></table></div>
+    </section>
+    <section id="reports" class="page"><h1>Reports</h1><div class="report-grid" id="reportGrid"></div><div class="table-box"><button class="primary-btn" id="exportAlumni">Export Alumni CSV</button></div></section>
+    <section id="users" class="page"><h1>User Management</h1><div class="table-box"><table><thead><tr><th>Username</th><th>Role</th><th>Status</th></tr></thead><tbody id="usersTable"></tbody></table><p class="small-note">This demo lists the system accounts stored in this browser.</p></div></section>
+    <section id="activityLogs" class="page">
+      <h1>Activity Logs</h1>
+      <p>Review recorded account and system activity for this browser.</p>
+      <div class="log-summary">
+        <div class="log-stat"><strong>Total Entries</strong><span id="logTotal">0</span></div>
+        <div class="log-stat"><strong>Successful Logins</strong><span id="logSuccess">0</span></div>
+        <div class="log-stat"><strong>Failed Logins</strong><span id="logFailed">0</span></div>
+        <div class="log-stat"><strong>Data Changes</strong><span id="logChanges">0</span></div>
+      </div>
+      <div class="table-box">
+        <div class="log-toolbar"><input class="search" id="logSearch" placeholder="Search username, action, or details"><button class="primary-btn" id="exportLogs" type="button">Export Logs CSV</button><button class="secondary-btn" id="refreshLogs" type="button">Refresh</button></div>
+        <table><thead><tr><th>Date and Time</th><th>Username</th><th>Action</th><th>Details</th><th>Status</th></tr></thead><tbody id="logsTable"></tbody></table>
+        <p id="noLogsMessage" class="small-note" hidden>No activity logs match your search.</p>
+        <p class="small-note">Logs are saved in localStorage on this browser and limited to the latest 1,000 entries. They are not shared across devices.</p>
+      </div>
+    </section>
+    <section id="settings" class="page">
+      <h1>Settings</h1>
+      <div class="settings-tabs"><button class="settings-tab-btn active" data-tab="system">System Settings</button><button class="settings-tab-btn" data-tab="profile">Edit Profile</button></div>
+      <div id="system-settings" class="settings-content active"><div class="settings-box"><div class="settings"><label for="systemName">System Name</label><input id="systemName" value="Implementation Of A Web Based Alumni Database Management System"><button id="saveSettings" class="primary-btn">Save Settings</button></div></div></div>
+      <div id="profile-settings" class="settings-content">
+        <div class="profile-card"><div class="profile-header"><div class="profile-avatar" id="profileAvatar">AD</div><div><h2 id="profileHeading">Administrator</h2><p id="profileRole">System Administrator</p></div></div>
+          <div class="profile-details"><div class="profile-detail"><strong>Email</strong><span id="profileEmailDisplay">admin@alumni.local</span></div><div class="profile-detail"><strong>Phone</strong><span id="profilePhoneDisplay">Not provided</span></div><div class="profile-detail"><strong>Location</strong><span id="profileLocationDisplay">Not provided</span></div></div><p class="profile-bio" id="profileBioDisplay">Manage your account information and keep your contact details up to date.</p>
+        </div>
+        <div class="form-box"><h2>Edit Profile Information</h2><form id="profileForm"><div class="form-grid">
+          <div class="form-group"><label for="profileName">Full Name</label><input id="profileName" required></div>
+          <div class="form-group"><label for="profileEmail">Email</label><input id="profileEmail" type="email" required></div>
+          <div class="form-group"><label for="profileRoleInput">Role</label><input id="profileRoleInput" required></div>
+          <div class="form-group"><label for="profilePhone">Phone</label><input id="profilePhone" type="tel" placeholder="e.g. +63 912 345 6789"></div>
+          <div class="form-group"><label for="profileLocation">Location</label><input id="profileLocation" placeholder="e.g. Manila, Philippines"></div>
+          <div class="form-group" style="grid-column:1/-1"><label for="profileBio">Bio</label><textarea id="profileBio" placeholder="Tell us a little about yourself"></textarea></div>
+        </div><button class="primary-btn" type="submit">Save Profile</button><p id="profileMessage" class="profile-message" role="status">Profile updated successfully.</p></form></div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+const starter = [
+{name:'Alyssa Mae Dela Cruz',course:'BS Computer Science',gender:'Female',year:2024,email:'alyssa.dela.cruz@example.com'},
+{name:'Mark Joseph Santos',course:'BS Computer Science',gender:'Male',year:2025,email:'mark.santos@example.com'},
+{name:'Christian James Rivera',course:'BS Computer Science',gender:'Male',year:2024,email:'christian.rivera@example.com'},
+{name:'Sophia Anne Bautista',course:'BS Computer Science',gender:'Female',year:2025,email:'sophia.bautista@example.com'},
+{name:'Daniel Paulo Cruz',course:'BS Computer Science',gender:'Male',year:2024,email:'daniel.cruz@example.com'},
+{name:'Bianca Claire Mendoza',course:'BS Computer Science',gender:'Female',year:2025,email:'bianca.mendoza@example.com'},
+{name:'Nathaniel Reyes',course:'BS Computer Science',gender:'Male',year:2024,email:'nathaniel.reyes@example.com'},
+{name:'Camille Joy Villanueva',course:'BS Computer Science',gender:'Female',year:2025,email:'camille.villanueva@example.com'},
+{name:'Jayson Lee Ramos',course:'BS Computer Science',gender:'Male',year:2024,email:'jayson.ramos@example.com'},
+{name:'Grace Anne Lim',course:'BS Computer Science',gender:'Female',year:2025,email:'grace.lim@example.com'},
+{name:'Elijah James Garcia',course:'BS Information Technology',gender:'Male',year:2024,email:'elijah.garcia@example.com'},
+{name:'Mia Grace Torres',course:'BS Information Technology',gender:'Female',year:2025,email:'mia.torres@example.com'},
+{name:'Jericho David Aquino',course:'BS Information Technology',gender:'Male',year:2024,email:'jericho.aquino@example.com'},
+{name:'Patricia Rose Santos',course:'BS Information Technology',gender:'Female',year:2025,email:'patricia.santos@example.com'},
+{name:'Adrian Paul Umali',course:'BS Information Technology',gender:'Male',year:2024,email:'adrian.umali@example.com'},
+{name:'Karen Jane Lopez',course:'BS Information Technology',gender:'Female',year:2025,email:'karen.lopez@example.com'},
+{name:'Marcus Daniel Ferrer',course:'BS Information Technology',gender:'Male',year:2024,email:'marcus.ferrer@example.com'},
+{name:'Celine Marie Abad',course:'BS Information Technology',gender:'Female',year:2025,email:'celine.abad@example.com'},
+{name:'Rafael M. Gonzales',course:'BS Information Technology',gender:'Male',year:2024,email:'rafael.gonzales@example.com'},
+{name:'Angela Mae Dizon',course:'BS Information Technology',gender:'Female',year:2025,email:'angela.dizon@example.com'},
+{name:'Kyle Ian Cervantes',course:'BS Information System',gender:'Male',year:2024,email:'kyle.cervantes@example.com'},
+{name:'Andrea Nicole Salazar',course:'BS Information System',gender:'Female',year:2025,email:'andrea.salazar@example.com'},
+{name:'Vincent Carl De Leon',course:'BS Information System',gender:'Male',year:2024,email:'vincent.deleon@example.com'},
+{name:'Rosemarie Anne Panganiban',course:'BS Information System',gender:'Female',year:2025,email:'rosemarie.panganiban@example.com'},
+{name:'Kenneth James Tan',course:'BS Information System',gender:'Male',year:2024,email:'kenneth.tan@example.com'},
+{name:'Janice Mae Francisco',course:'BS Information System',gender:'Female',year:2025,email:'janice.francisco@example.com'},
+{name:'Joshua Daniel2 228 L250 228 L238 228 L190 200 L230 188 L250 194 Z"/>
             <polygon points="250,155 300,238 250,270 200,238" fill="#d9c9a7"/>
             <path d="M150 220 L250 205 L350 220 L330 268 L250 300 L170 268 Z" fill="#ccb88d"/>
             <path d="M250 135 L232 185 L250 200 L268 185 Z" fill="#2d4a66"/>
